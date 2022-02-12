@@ -1,10 +1,10 @@
-import { StarIcon } from "@sanity/icons";
+import { FaStarHalfAlt } from "react-icons/fa";
 
 export default {
   name: "rating",
   title: "Rating",
   type: "document",
-  icon: StarIcon,
+  icon: FaStarHalfAlt,
   fields: [
     {
       name: "recipe",

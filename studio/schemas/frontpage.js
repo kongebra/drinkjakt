@@ -1,9 +1,9 @@
-import { HomeIcon } from "@sanity/icons";
+import { FaHome } from "react-icons/fa";
 
 export default {
   name: "frontpage",
   title: "Front Page",
-  icon: HomeIcon,
+  icon: FaHome,
   type: "document",
   fields: [
     {

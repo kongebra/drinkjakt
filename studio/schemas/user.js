@@ -1,10 +1,10 @@
-import { UserIcon } from "@sanity/icons";
+import { FaUser } from "react-icons/fa";
 
 export default {
   name: "user",
   title: "User",
   type: "document",
-  icon: UserIcon,
+  icon: FaUser,
   fields: [
     {
       name: "firstName",
