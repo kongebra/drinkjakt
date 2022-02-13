@@ -1,6 +1,4 @@
-import React from "react";
 import { FaTags } from "react-icons/fa";
-import TagPreview from "../components/TagPreview";
 import { isUniqueAcrossType } from "../lib/isUnique";
 
 export default {
@@ -24,17 +22,10 @@ export default {
         isUnique: isUniqueAcrossType("tag"),
       },
     },
-    {
-      name: "color",
-      title: "Color",
-      type: "colorPicker",
-    },
   ],
   preview: {
     select: {
-      name: "name",
-      color: "color",
+      title: "name",
     },
-    component: TagPreview,
   },
 };

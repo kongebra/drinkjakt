@@ -75,7 +75,7 @@ export interface Recipe extends SanityDocument {
   slug?: { _type: "slug"; current: string };
 
   /**
-   * Description — `string`
+   * Description — `text`
    *
    *
    */
@@ -92,6 +92,13 @@ export interface Recipe extends SanityDocument {
     crop?: SanityImageCrop;
     hotspot?: SanityImageHotspot;
   };
+
+  /**
+   * Tags — `array`
+   *
+   *
+   */
+  tags?: Array<SanityKeyedReference<Tag>>;
 
   /**
    * Difficulty — `string`
@@ -367,6 +374,59 @@ export interface Ice extends SanityDocument {
   };
 }
 
+/**
+ * Tags
+ *
+ *
+ */
+export interface Tag extends SanityDocument {
+  _type: "tag";
+
+  /**
+   * Name — `string`
+   *
+   *
+   */
+  name?: string;
+
+  /**
+   * Slug — `slug`
+   *
+   *
+   */
+  slug?: { _type: "slug"; current: string };
+}
+
+/**
+ * Route
+ *
+ *
+ */
+export interface Route extends SanityDocument {
+  _type: "route";
+
+  /**
+   * Name — `string`
+   *
+   *
+   */
+  name?: string;
+
+  /**
+   * Slug — `slug`
+   *
+   *
+   */
+  slug?: { _type: "slug"; current: string };
+
+  /**
+   * Path — `string`
+   *
+   *
+   */
+  path?: string;
+}
+
 export type BlockContent = Array<
   | SanityKeyed<SanityBlock>
   | SanityKeyed<{
@@ -384,4 +444,6 @@ export type Documents =
   | Rating
   | User
   | Glass
-  | Ice;
+  | Ice
+  | Tag
+  | Route;

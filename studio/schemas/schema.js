@@ -14,6 +14,7 @@ import ingredient from "./ingredient";
 import glass from "./glass";
 import ice from "./ice";
 import tag from "./tag";
+import route from "./route";
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -36,5 +37,6 @@ export default createSchema({
     glass,
     ice,
     tag,
+    route,
   ]),
 });
