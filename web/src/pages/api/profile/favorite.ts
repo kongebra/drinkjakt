@@ -10,13 +10,14 @@ type Body = {
 };
 
 type Response = {
-  removed: boolean;
-  insterted?: SanityKeyedReference<Recipe>;
+  message: string;
+  removed?: boolean;
+  inserted?: SanityKeyedReference<Recipe>;
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<Response>
 ) {
   if (req.method === "POST") {
     const { userId, recipeId } = req.body as Body;
@@ -42,7 +43,8 @@ export default async function handler(
 
         return res.json({
           message: "favorite removed",
-          data: { removed: true, inserted: undefined },
+          removed: true,
+          inserted: undefined,
         });
       }
 
@@ -66,7 +68,8 @@ export default async function handler(
 
         return res.json({
           message: "favorite added",
-          data: { removed: false, inserted: newFavorite },
+          removed: false,
+          inserted: newFavorite,
         });
       }
 

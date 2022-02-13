@@ -10,6 +10,8 @@ import {
 import { useAppUser } from "hooks/use-app-user";
 
 import RecipeCard from "./RecipeCard";
+import FeatureCard from "./FeatureCard";
+import FavoriteButton from "./FavoriteButton";
 
 interface Props {
   frontpage: FrontpageWithRecipes;
@@ -34,6 +36,7 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
 
   const handleOnClickFavorite = (recipe: Recipe) => {
     if (!user) {
+      // TODO: Send user to login page
       return;
     }
 
@@ -49,6 +52,8 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
     })
       .then((res) => res.json())
       .then((data: FavoriteResponse) => {
+        console.log({ data });
+
         if (data.inserted) {
           setFavorites((prevValue) => [...prevValue, data.inserted!]);
 
@@ -74,13 +79,13 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
 
           {frontpage.recipes?.map((recipe) => (
             <div key={recipe._id} className="col">
-              <RecipeCard
-                recipe={recipe}
-                highRes
-                showFavorite={user !== undefined}
-                favorite={favorites.some((x) => x._ref === recipe._id)}
-                onClickFavorite={() => handleOnClickFavorite(recipe)}
-              />
+              <div className="position-relative">
+                <FeatureCard recipe={recipe} />
+                <FavoriteButton
+                  active={favorites.some((x) => x._ref === recipe._id)}
+                  onClick={() => handleOnClickFavorite(recipe)}
+                />
+              </div>
             </div>
           ))}
         </div>

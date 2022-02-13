@@ -25,7 +25,7 @@ const Navigation: React.FC<Props> = ({ navLinkItems }) => {
   const { user } = useUser();
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="white" expand="lg">
       <Container>
         <Link href="/" passHref>
           <Navbar.Brand>DrinkJakt</Navbar.Brand>

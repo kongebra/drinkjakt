@@ -19,6 +19,7 @@ const Home: NextPage<Props> = ({ frontpage }) => {
       <Head>
         <title>Forsiden | DrinkJakt</title>
       </Head>
+
       <FeaturedRecipes frontpage={frontpage} />
     </>
   );
@@ -33,11 +34,13 @@ export const getStaticProps: GetStaticProps<Props> = async ({
       name,
       slug,
       image,
+      difficulty,
+      ingredients,
       
-      "ratings": *[_type == "rating" && recipe._id == ^._id]{
+      "ratings": *[_type == "rating" && recipe._ref == ^._id] {
         rating
       }
-    }
+    },
   }`;
 
   const frontpage = await getClient(preview).fetch<FrontpageWithRecipes>(query);

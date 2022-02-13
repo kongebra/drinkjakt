@@ -42,7 +42,7 @@ export default handleAuth({
     } catch (ex) {
       const error = ex as any;
 
-      res.status(error.status || 500).end(error.message);
+      res.status(error.status || 500).send(error.message);
     }
   },
 });

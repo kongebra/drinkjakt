@@ -13,8 +13,8 @@ export interface FavoriteButtonProps {
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   active,
-  size = 32,
-  color = "white",
+  size = 15,
+  color = "#CCC",
   hoverColor = "red",
   onClick,
 }) => {
@@ -30,21 +30,19 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       return <FaHeart size={size} color={hoverColor} />;
     }
 
-    if (isHover) {
-      return <FaRegHeart size={size} color={hoverColor} />;
-    }
-
-    return <FaRegHeart size={size} color={color} />;
+    return <FaHeart size={size} color={isHover ? hoverColor : color} />;
   };
 
   return (
     <button
       ref={hoverRef}
       type="button"
-      className="btn m-0 p-0"
+      className="favorite-btn"
       onClick={onClick}
+      title="Favorite recipe"
     >
       {renderIcon()}
+      <span className="invisible">Favorite recipe</span>
     </button>
   );
 };

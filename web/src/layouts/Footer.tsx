@@ -12,21 +12,21 @@ interface Social {
 const Footer = () => {
   const socials: Array<Social> = [
     {
-      href: "https://facebook.com/drinkkart",
+      href: "https://facebook.com/drinkjakt",
       icon: <FaFacebook />,
     },
     {
-      href: "https://instagram.com/drinkkart",
+      href: "https://instagram.com/drinkjakt",
       icon: <FaInstagram />,
     },
     {
-      href: "https://twitter.com/drinkkart",
+      href: "https://twitter.com/drinkjakt",
       icon: <FaTwitter />,
     },
   ];
 
   return (
-    <footer className="bg-light">
+    <footer className="bg-white">
       <div className="container">
         <div className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
           <div className="col-md-4 d-flex align-items-center">
@@ -36,7 +36,10 @@ const Footer = () => {
               </a>
             </Link>
             <span className="text-muted">
-              &copy; {new Date().getFullYear()} kongebra.net
+              &copy; {new Date().getFullYear()}{" "}
+              <a href="https://kongebra.net" target="_blank">
+                kongebra.net
+              </a>
             </span>
           </div>
 
