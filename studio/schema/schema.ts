@@ -75,6 +75,13 @@ export interface Recipe extends SanityDocument {
   slug?: { _type: "slug"; current: string };
 
   /**
+   * Description — `string`
+   *
+   *
+   */
+  description?: string;
+
+  /**
    * Image — `image`
    *
    *
@@ -87,11 +94,105 @@ export interface Recipe extends SanityDocument {
   };
 
   /**
+   * Difficulty — `string`
+   *
+   *
+   */
+  difficulty?: "beginner" | "intermediate" | "advanced";
+
+  /**
+   * Glass — `reference`
+   *
+   *
+   */
+  glass?: SanityReference<Glass>;
+
+  /**
+   * Ice — `reference`
+   *
+   *
+   */
+  ice?: SanityReference<Ice>;
+
+  /**
    * Ingredients — `array`
    *
    *
    */
-  ingredients?: Array<SanityKeyed<Ingredient>>;
+  ingredients?: Array<
+    SanityKeyed<{
+      _type: "ingredients";
+      /**
+       * Ingredient — `reference`
+       *
+       *
+       */
+      ingredient?: SanityReference<Ingredient>;
+
+      /**
+       * Amount — `number`
+       *
+       *
+       */
+      amount?: number;
+
+      /**
+       * Unit — `string`
+       *
+       *
+       */
+      unit?: string;
+    }>
+  >;
+
+  /**
+   * Instructions — `blockContent`
+   *
+   *
+   */
+  instructions?: BlockContent;
+}
+
+/**
+ * Ingredient
+ *
+ *
+ */
+export interface Ingredient extends SanityDocument {
+  _type: "ingredient";
+
+  /**
+   * Name — `string`
+   *
+   *
+   */
+  name?: string;
+
+  /**
+   * Slug — `slug`
+   *
+   *
+   */
+  slug?: { _type: "slug"; current: string };
+
+  /**
+   * Description — `string`
+   *
+   *
+   */
+  description?: string;
+
+  /**
+   * Image — `image`
+   *
+   *
+   */
+  image?: {
+    _type: "image";
+    asset: SanityReference<SanityImageAsset>;
+    crop?: SanityImageCrop;
+    hotspot?: SanityImageHotspot;
+  };
 }
 
 /**
@@ -182,8 +283,14 @@ export interface User extends SanityDocument {
   favorites?: Array<SanityKeyedReference<Recipe>>;
 }
 
-export type Ingredient = {
-  _type: "ingredient";
+/**
+ * Glass
+ *
+ *
+ */
+export interface Glass extends SanityDocument {
+  _type: "glass";
+
   /**
    * Name — `string`
    *
@@ -192,19 +299,73 @@ export type Ingredient = {
   name?: string;
 
   /**
-   * Amount — `number`
+   * Slug — `slug`
    *
    *
    */
-  amount?: number;
+  slug?: { _type: "slug"; current: string };
 
   /**
-   * Unit — `string`
+   * Description — `string`
    *
    *
    */
-  unit?: string;
-};
+  description?: string;
+
+  /**
+   * Image — `image`
+   *
+   *
+   */
+  image?: {
+    _type: "image";
+    asset: SanityReference<SanityImageAsset>;
+    crop?: SanityImageCrop;
+    hotspot?: SanityImageHotspot;
+  };
+}
+
+/**
+ * Ice
+ *
+ *
+ */
+export interface Ice extends SanityDocument {
+  _type: "ice";
+
+  /**
+   * Name — `string`
+   *
+   *
+   */
+  name?: string;
+
+  /**
+   * Slug — `slug`
+   *
+   *
+   */
+  slug?: { _type: "slug"; current: string };
+
+  /**
+   * Description — `string`
+   *
+   *
+   */
+  description?: string;
+
+  /**
+   * Image — `image`
+   *
+   *
+   */
+  image?: {
+    _type: "image";
+    asset: SanityReference<SanityImageAsset>;
+    crop?: SanityImageCrop;
+    hotspot?: SanityImageHotspot;
+  };
+}
 
 export type BlockContent = Array<
   | SanityKeyed<SanityBlock>
@@ -216,4 +377,11 @@ export type BlockContent = Array<
     }>
 >;
 
-export type Documents = Frontpage | Recipe | Rating | User;
+export type Documents =
+  | Frontpage
+  | Recipe
+  | Ingredient
+  | Rating
+  | User
+  | Glass
+  | Ice;

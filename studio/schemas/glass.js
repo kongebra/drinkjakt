@@ -1,4 +1,5 @@
 import { FaGlassMartini } from "react-icons/fa";
+import { isUniqueAcrossType } from "../lib/isUnique";
 
 export default {
   name: "glass",
@@ -18,6 +19,7 @@ export default {
       options: {
         source: "name",
         maxLength: 100,
+        isUnique: isUniqueAcrossType("glass"),
       },
     },
     {

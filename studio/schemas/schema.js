@@ -13,6 +13,7 @@ import frontpage from "./frontpage";
 import ingredient from "./ingredient";
 import glass from "./glass";
 import ice from "./ice";
+import tag from "./tag";
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -34,5 +35,6 @@ export default createSchema({
     user,
     glass,
     ice,
+    tag,
   ]),
 });
