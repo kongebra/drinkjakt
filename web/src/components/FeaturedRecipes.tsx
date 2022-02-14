@@ -12,6 +12,7 @@ import { useAppUser } from "hooks/use-app-user";
 import RecipeCard from "./RecipeCard";
 import FeatureCard from "./FeatureCard";
 import FavoriteButton from "./FavoriteButton";
+import { useRouter } from "next/router";
 
 interface Props {
   frontpage: FrontpageWithRecipes;
@@ -24,6 +25,8 @@ type FavoriteResponse = {
 };
 
 const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
+  const router = useRouter();
+
   const { user } = useAppUser();
 
   const [favorites, setFavorites] = useState<Array<string>>(
@@ -33,7 +36,7 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
   const removeFavorite = (id: string) => {
     setFavorites((prev) => prev.filter((x) => x !== id));
   };
-  const checkIfFavorite = (id: string) => favorites.some((x) => x === id);
+  const isFavorite = (id: string) => favorites.some((x) => x === id);
 
   useEffect(() => {
     if (user?.favorites && favorites.length === 0) {
@@ -43,7 +46,7 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
 
   const handleOnClickFavorite = (recipe: Recipe, favorite: boolean) => {
     if (!user) {
-      // TODO: Send user to login page
+      router.push("/login");
       return;
     }
 
@@ -88,9 +91,9 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
               <div className="position-relative">
                 <FeatureCard recipe={recipe} />
                 <FavoriteButton
-                  active={checkIfFavorite(recipe._id)}
+                  active={isFavorite(recipe._id)}
                   onClick={() =>
-                    handleOnClickFavorite(recipe, !checkIfFavorite(recipe._id))
+                    handleOnClickFavorite(recipe, !isFavorite(recipe._id))
                   }
                 />
               </div>
