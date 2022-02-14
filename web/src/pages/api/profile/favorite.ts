@@ -7,20 +7,15 @@ import { groq } from "next-sanity";
 type Body = {
   userId: string;
   recipeId: string;
-};
-
-type Response = {
-  message: string;
-  removed?: boolean;
-  inserted?: SanityKeyedReference<Recipe>;
+  favorite: boolean;
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Response>
+  res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { userId, recipeId } = req.body as Body;
+    const { userId, recipeId, favorite } = req.body as Body;
 
     const client = getClient(true);
 
@@ -29,25 +24,36 @@ export default async function handler(
       id: userId,
     };
 
+    // find user
     const userResponse = await client.fetch<User>(userQuery, userParams);
     if (userResponse) {
+      // check if recipe in favorites already
       const alreadyFavorited = userResponse.favorites?.some(
         (x) => x._ref === recipeId
       );
 
+      console.log({ alreadyFavorited, favorite });
+
       if (alreadyFavorited) {
-        await client
+        // already favorite, and like to favorite it again (just chill)
+        if (favorite) {
+          return res.status(204);
+        }
+
+        const unsetResponse = await client
           .patch(userId)
           .unset([`favorites[_ref == "${recipeId}"]`])
           .commit();
 
-        return res.json({
-          message: "favorite removed",
-          removed: true,
-          inserted: undefined,
-        });
+        return res.json(unsetResponse);
       }
 
+      // recipe is not fav from before, and we want to unlike it, just drop any other actions
+      if (favorite === false) {
+        return res.status(204);
+      }
+
+      // find recipe
       const recipeQuery = groq`*[_type == "recipe" && _id == $id][0]`;
       const recipeParams = {
         id: recipeId,
@@ -57,6 +63,7 @@ export default async function handler(
         recipeQuery,
         recipeParams
       );
+      // check if recipe exists
       if (recipeResponse) {
         const newFavorite: SanityKeyedReference<Recipe> = {
           _key: nanoid(),
@@ -64,13 +71,12 @@ export default async function handler(
           _type: "reference",
         };
 
-        await client.patch(userId).append("favorites", [newFavorite]).commit();
+        const appendResponse = await client
+          .patch(userId)
+          .append("favorites", [newFavorite])
+          .commit();
 
-        return res.json({
-          message: "favorite added",
-          removed: false,
-          inserted: newFavorite,
-        });
+        return res.json(appendResponse);
       }
 
       return res.status(404).json({ message: "recipe not found" });

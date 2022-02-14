@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -26,18 +26,33 @@ type FavoriteResponse = {
 const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
   const { user } = useAppUser();
 
-  const [favorites, setFavorites] = useState<
-    Array<SanityKeyedReference<Recipe>>
-  >(user?.favorites || []);
+  const [favorites, setFavorites] = useState<Array<string>>(
+    (user && user.favorites && user.favorites.map((x) => x._ref)) || []
+  );
+  const addFavorite = (id: string) => setFavorites((prev) => [...prev, id]);
+  const removeFavorite = (id: string) => {
+    setFavorites((prev) => prev.filter((x) => x !== id));
+  };
+  const checkIfFavorite = (id: string) => favorites.some((x) => x === id);
 
   useEffect(() => {
-    setFavorites(user?.favorites || []);
-  }, [user?.favorites?.length]);
+    if (user?.favorites && favorites.length === 0) {
+      setFavorites(user.favorites.map((x) => x._ref));
+    }
+  }, [user]);
 
-  const handleOnClickFavorite = (recipe: Recipe) => {
+  const handleOnClickFavorite = (recipe: Recipe, favorite: boolean) => {
     if (!user) {
       // TODO: Send user to login page
       return;
+    }
+
+    if (favorite) {
+      addFavorite(recipe._id);
+      toast(`❤️ ${recipe.name} added to favorites!`);
+    } else {
+      removeFavorite(recipe._id);
+      toast(`❌ ${recipe.name} removed from favorites!`);
     }
 
     fetch("/api/profile/favorite", {
@@ -48,27 +63,18 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
       body: JSON.stringify({
         userId: user._id,
         recipeId: recipe._id,
+        favorite: favorite,
       }),
-    })
-      .then((res) => res.json())
-      .then((data: FavoriteResponse) => {
-        console.log({ data });
-
-        if (data.inserted) {
-          setFavorites((prevValue) => [...prevValue, data.inserted!]);
-
-          toast(`❤️ ${recipe.name} added to favorites!`);
-        } else {
-          setFavorites((prevValue) =>
-            prevValue.filter((x) => x._ref !== recipe._id)
-          );
-
-          toast(`❌ ${recipe.name} removed from favorites!`);
-        }
-      })
-      .catch(() => {
-        toast.error(`Could not favorite/unfavorite ${recipe.name}.`);
-      });
+    }).catch(() => {
+      // error happend,
+      if (favorite) {
+        removeFavorite(recipe._id);
+        toast.error(`Could favorite recipe: ${recipe.name}.`);
+      } else {
+        addFavorite(recipe._id);
+        toast.error(`Could not remove favorite from recipe: ${recipe.name}.`);
+      }
+    });
   };
 
   return (
@@ -82,8 +88,10 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
               <div className="position-relative">
                 <FeatureCard recipe={recipe} />
                 <FavoriteButton
-                  active={favorites.some((x) => x._ref === recipe._id)}
-                  onClick={() => handleOnClickFavorite(recipe)}
+                  active={checkIfFavorite(recipe._id)}
+                  onClick={() =>
+                    handleOnClickFavorite(recipe, !checkIfFavorite(recipe._id))
+                  }
                 />
               </div>
             </div>
