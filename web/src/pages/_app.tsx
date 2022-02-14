@@ -17,8 +17,9 @@ function App({ Component, pageProps }: AppProps) {
       <SSRProvider>
         <Layout>
           <Component {...pageProps} />
-          <ToastifyContainer />
         </Layout>
+
+        <ToastifyContainer />
       </SSRProvider>
     </UserProvider>
   );
