@@ -8,7 +8,7 @@ const Layout: React.FC = ({ children }) => {
     <div className="min-vh-100 d-flex flex-column">
       <Header />
 
-      <main className="flex-fill bg-light">{children}</main>
+      <main className="d-flex flex-column flex-fill bg-light">{children}</main>
 
       <Footer />
     </div>
