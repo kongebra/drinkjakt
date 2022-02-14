@@ -8,6 +8,7 @@ import { getClient } from "lib/sanity.server";
 import { FrontpageWithRecipes } from "@studio/schema";
 
 import FeaturedRecipes from "components/FeaturedRecipes";
+import InformationTab from "components/InformationTab";
 
 interface Props {
   frontpage: FrontpageWithRecipes;
@@ -21,6 +22,15 @@ const Home: NextPage<Props> = ({ frontpage }) => {
       </Head>
 
       <FeaturedRecipes frontpage={frontpage} />
+
+      <section>
+        <div className="container">
+          <InformationTab
+            text="Vil du vite mer om DrinkJakt?"
+            buttonText="Les om oss her!"
+          />
+        </div>
+      </section>
     </>
   );
 };
