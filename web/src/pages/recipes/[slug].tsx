@@ -3,18 +3,25 @@ import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 
-import { ParsedUrlQuery } from "querystring";
-
 import { groq } from "next-sanity";
 
 import { getClient } from "lib/sanity.server";
+import { RecipeDetails } from "@studio/schema";
 
-import { Rating, Recipe } from "@studio/schema";
+interface Props {
+  recipe: RecipeDetails;
+}
 
-interface Props {}
-
-const RecipePage: React.FC<Props> = ({}) => {
-  return <></>;
+const RecipePage: React.FC<Props> = ({ recipe }) => {
+  return (
+    <div>
+      <section>
+        <div className="container">
+          <h1>{recipe.name}</h1>
+        </div>
+      </section>
+    </div>
+  );
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -22,12 +29,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths = await getClient().fetch(allSlugQuery);
 
   return {
-    paths: paths.map((slug: string) => `/recipe/${slug}`),
+    paths: paths.map((slug: string) => `/recipes/${slug}`),
     fallback: true,
   };
 };
 
-export const getStaticProps: GetStaticProps = (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const query = groq`*[_type == "recipe" && slug.current == $slug][0] {
     _id,
     name,
@@ -51,9 +58,20 @@ export const getStaticProps: GetStaticProps = (context) => {
       unit
     },
   }`;
+  const slug = context.params?.slug as string;
+
+  const recipe = await getClient().fetch(query, { slug });
+
+  if (!recipe) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
-    props: {},
+    props: {
+      recipe,
+    },
   };
 };
 
