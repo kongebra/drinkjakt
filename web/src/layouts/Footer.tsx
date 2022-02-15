@@ -26,26 +26,26 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-dark text-light">
-      <div className="container">
-        <div className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-          <div className="col-md-4 d-flex align-items-center">
+    <footer className="bg-gray-800 text-white">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center flex-wrap py-3 my-4">
+          <div className="flex items-center gap-2">
             <Link href="/" passHref>
-              <a className="mb-3 me-2 mb-md-0 text-light text-decoration-none lh-1">
-                <strong>DrinkJakt</strong>
-              </a>
+              <a className="font-bold hover:underline">DrinkJakt</a>
             </Link>
-            <span>
-              &copy; {new Date().getFullYear()}{" "}
-              <a href="https://kongebra.net" target="_blank">
-                kongebra.net
-              </a>
-            </span>
+            <span>&copy; {new Date().getFullYear()}</span>
+            <a
+              href="https://kongebra.net"
+              target="_blank"
+              className="hover:underline"
+            >
+              kongebra.net
+            </a>
           </div>
 
-          <ul className="nav col-md-4 justify-content-end list-unstyled d-flex">
+          <ul className="flex justify-end list-none gap-3">
             {socials.map((item, index) => (
-              <li className="ms-3" key={index}>
+              <li key={index}>
                 <a href={item.href} target="_blank">
                   {item.icon}
                 </a>

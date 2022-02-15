@@ -1,7 +1,6 @@
 import React from "react";
 
 import Footer from "./Footer";
-import Header from "./Header";
 import Navbar, { NavItem } from "./Navbar/Navbar";
 
 const Layout: React.FC = ({ children }) => {
@@ -20,7 +19,7 @@ const Layout: React.FC = ({ children }) => {
     <div className="flex flex-col min-h-screen">
       <Navbar navItems={navItems} />
 
-      <main className="flex flex-col">{children}</main>
+      <main className="flex flex-auto flex-col">{children}</main>
 
       <Footer />
     </div>
