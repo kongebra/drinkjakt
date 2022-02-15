@@ -11,6 +11,7 @@ import { getClient } from "lib/sanity.server";
 import { RecipeWithRatings } from "@studio/schema";
 
 import Rating from "./RatingStars";
+import { formatDifficulty } from "utils";
 
 export interface FeatureCardProps {
   recipe: RecipeWithRatings;
@@ -29,12 +30,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ recipe }) => {
         .quality(options.quality || 100);
     },
   });
-
-  const formatDifficulty = (
-    difficulty: "beginner" | "intermediate" | "advanced" | string
-  ) => {
-    return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-  };
 
   return (
     <a
@@ -63,14 +58,14 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ recipe }) => {
           {recipe.difficulty && (
             <dd className="mb-0 d-flex gap-1 justify-content-center align-items-center">
               <GiCook />
-              {formatDifficulty(recipe.difficulty)}
+              {formatDifficulty(recipe.difficulty, true)}
             </dd>
           )}
 
           {recipe?.ingredients && (
             <dd className="mb-0 d-flex gap-1 justify-content-center align-items-center">
               <FaList />
-              {recipe.ingredients.length} ingredients
+              {recipe.ingredients.length} ingredienser
             </dd>
           )}
         </dl>

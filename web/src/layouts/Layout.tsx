@@ -2,13 +2,25 @@ import React from "react";
 
 import Footer from "./Footer";
 import Header from "./Header";
+import Navbar, { NavItem } from "./Navbar/Navbar";
 
 const Layout: React.FC = ({ children }) => {
-  return (
-    <div className="min-vh-100 d-flex flex-column">
-      <Header />
+  const navItems: Array<NavItem> = [
+    {
+      href: "/",
+      text: "Forsiden",
+    },
+    {
+      href: "/recipes",
+      text: "Oppskrifter",
+    },
+  ];
 
-      <main className="d-flex flex-column flex-fill bg-light">{children}</main>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar navItems={navItems} />
+
+      <main className="flex flex-col">{children}</main>
 
       <Footer />
     </div>

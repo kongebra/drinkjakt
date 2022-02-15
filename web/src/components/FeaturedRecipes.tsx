@@ -84,7 +84,7 @@ const FeaturedRecipes: FC<Props> = ({ frontpage }) => {
     <section className="py-3">
       <div className="container">
         <div className="row">
-          <h1 className="text-center mb-5">Featured Recipes</h1>
+          <h1 className="text-center mb-5">Fremhevet oppskrifter</h1>
 
           {frontpage.recipes?.map((recipe) => (
             <div key={recipe._id} className="col">

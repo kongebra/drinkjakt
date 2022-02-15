@@ -13,11 +13,7 @@ const Header = () => {
     },
   ];
 
-  return (
-    <header className="border-bottom">
-      <Navigation navLinkItems={navLinkItems} />
-    </header>
-  );
+  return <header className="border-bottom"></header>;
 };
 
 export default Header;
