@@ -6,7 +6,7 @@ export interface RecipeWithRatings extends Recipe {
 }
 
 export interface FrontpageWithRecipes extends Frontpage {
-  recipes?: Array<RecipeWithRatings>;
+  recipes?: Array<RecipeDetails>;
 }
 
 export interface RecipeDetails

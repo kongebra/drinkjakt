@@ -49,7 +49,7 @@ export interface Frontpage extends SanityDocument {
    *
    *
    */
-  featured_recipes?: Array<SanityKeyedReference<Recipe>>;
+  featured_recipes: Array<SanityKeyedReference<Recipe>>;
 }
 
 /**
@@ -65,7 +65,7 @@ export interface Recipe extends SanityDocument {
    *
    *
    */
-  name?: string;
+  name: string;
 
   /**
    * Slug — `slug`
@@ -86,7 +86,7 @@ export interface Recipe extends SanityDocument {
    *
    *
    */
-  image?: {
+  image: {
     _type: "image";
     asset: SanityReference<SanityImageAsset>;
     crop?: SanityImageCrop;
@@ -105,7 +105,7 @@ export interface Recipe extends SanityDocument {
    *
    *
    */
-  difficulty?: "beginner" | "intermediate" | "advanced";
+  difficulty: "beginner" | "intermediate" | "advanced";
 
   /**
    * Glass — `reference`
@@ -126,7 +126,7 @@ export interface Recipe extends SanityDocument {
    *
    *
    */
-  ingredients?: Array<
+  ingredients: Array<
     SanityKeyed<{
       _type: "ingredients";
       /**
@@ -134,21 +134,21 @@ export interface Recipe extends SanityDocument {
        *
        *
        */
-      ingredient?: SanityReference<Ingredient>;
+      ingredient: SanityReference<Ingredient>;
 
       /**
        * Amount — `number`
        *
        *
        */
-      amount?: number;
+      amount: number;
 
       /**
        * Unit — `string`
        *
        *
        */
-      unit?: string;
+      unit: string;
     }>
   >;
 
@@ -173,14 +173,14 @@ export interface Ingredient extends SanityDocument {
    *
    *
    */
-  name?: string;
+  name: string;
 
   /**
    * Slug — `slug`
    *
    *
    */
-  slug?: { _type: "slug"; current: string };
+  slug: { _type: "slug"; current: string };
 
   /**
    * Description — `string`
@@ -215,21 +215,21 @@ export interface Rating extends SanityDocument {
    *
    *
    */
-  recipe?: SanityReference<Recipe>;
+  recipe: SanityReference<Recipe>;
 
   /**
    * User — `reference`
    *
    *
    */
-  user?: SanityReference<User>;
+  user: SanityReference<User>;
 
   /**
    * Rating — `number`
    *
    *
    */
-  rating?: number;
+  rating: number;
 }
 
 /**
@@ -245,21 +245,21 @@ export interface User extends SanityDocument {
    *
    *
    */
-  firstName?: string;
+  firstName: string;
 
   /**
    * Last Name — `string`
    *
    *
    */
-  lastName?: string;
+  lastName: string;
 
   /**
    * Email — `string`
    *
    *
    */
-  email?: string;
+  email: string;
 
   /**
    * Nickname — `string`
@@ -280,7 +280,7 @@ export interface User extends SanityDocument {
    *
    *
    */
-  auth0_sub?: string;
+  auth0_sub: string;
 
   /**
    * Favorites — `array`

@@ -11,6 +11,8 @@ export default {
       name: "name",
       title: "Name",
       type: "string",
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "slug",
@@ -20,7 +22,10 @@ export default {
         source: "name",
         maxLength: 100,
         isUnique: isUniqueAcrossType("ingredient"),
+        auto: true,
       },
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "description",

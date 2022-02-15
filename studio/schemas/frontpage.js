@@ -11,6 +11,8 @@ export default {
       title: "Featured Recipes",
       type: "array",
       of: [{ type: "reference", to: [{ type: "recipe" }] }],
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
   ],
   preview: {

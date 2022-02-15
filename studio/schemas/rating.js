@@ -11,12 +11,16 @@ export default {
       title: "Recipe",
       type: "reference",
       to: [{ type: "recipe" }],
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "user",
       title: "User",
       type: "reference",
       to: [{ type: "user" }],
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "rating",
@@ -27,6 +31,8 @@ export default {
         layout: "radio",
         direction: "horizontal",
       },
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
   ],
   preview: {

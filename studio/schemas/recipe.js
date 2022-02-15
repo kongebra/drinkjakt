@@ -31,6 +31,7 @@ export default {
       type: "string",
       group: "base",
       validation: (Rule) => Rule.required().min(2).max(64),
+      codegen: { required: true },
     },
     {
       name: "slug",
@@ -41,6 +42,7 @@ export default {
         source: "name",
         maxLength: 100,
         isUnique: isUniqueAcrossType("recipe"),
+        auto: true,
       },
     },
     {
@@ -59,6 +61,7 @@ export default {
         hotspot: true,
       },
       validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "tags",
@@ -76,6 +79,8 @@ export default {
         layout: "radio",
         direction: "horizontal",
       },
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "glass",
@@ -96,51 +101,9 @@ export default {
       title: "Ingredients",
       type: "array",
       group: "equipment",
-      of: [
-        {
-          type: "object",
-          name: "ingredients",
-
-          fields: [
-            {
-              name: "ingredient",
-              title: "Ingredient",
-              type: "reference",
-              to: [{ type: "ingredient" }],
-            },
-            {
-              name: "amount",
-              title: "Amount",
-              type: "number",
-            },
-            {
-              name: "unit",
-              title: "Unit",
-              type: "string",
-              options: {
-                // TODO: Make list?
-              },
-            },
-          ],
-          preview: {
-            select: {
-              name: "ingredient.name",
-              image: "ingredient.image",
-              amount: "amount",
-              unit: "unit",
-            },
-            prepare(selection) {
-              const { name, image, amount, unit } = selection;
-
-              return {
-                title: `${name}`,
-                subtitle: amount && unit ? `${amount} ${unit}` : "",
-                media: image,
-              };
-            },
-          },
-        },
-      ],
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
+      of: [{ type: "recipeIngredient" }],
     },
     {
       name: "instructions",

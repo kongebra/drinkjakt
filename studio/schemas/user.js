@@ -10,11 +10,15 @@ export default {
       name: "firstName",
       title: "First Name",
       type: "string",
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "lastName",
       title: "Last Name",
       type: "string",
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
     {
       name: "email",
@@ -28,6 +32,7 @@ export default {
             invert: false, // Boolean to allow any value that does NOT match pattern
           }
         ),
+      codegen: { required: true },
     },
     {
       name: "nickname",
@@ -44,6 +49,8 @@ export default {
       title: "Auth0 Sub",
       type: "string",
       readOnly: true,
+      validation: (Rule) => Rule.required(),
+      codegen: { required: true },
     },
 
     {

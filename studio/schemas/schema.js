@@ -3,13 +3,17 @@ import createSchema from "part:@sanity/base/schema-creator";
 // Then import schema types from any plugins that might expose them
 import schemaTypes from "all:part:@sanity/base/schema-type";
 
-// We import object and document schemas
+// Objects
 import blockContent from "./objects/blockContent";
+import recipeIngredient from "./objects/recipeIngredient";
 
+// Singeltons
+import frontpage from "./frontpage";
+
+// Documents
 import recipe from "./recipe";
 import rating from "./rating";
 import user from "./user";
-import frontpage from "./frontpage";
 import ingredient from "./ingredient";
 import glass from "./glass";
 import ice from "./ice";
@@ -25,6 +29,7 @@ export default createSchema({
   types: schemaTypes.concat([
     // objects
     blockContent,
+    recipeIngredient,
 
     // Singeltons
     frontpage,
