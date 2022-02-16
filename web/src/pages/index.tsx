@@ -7,30 +7,124 @@ import { getClient } from "lib/sanity.server";
 
 import { FrontpageWithRecipes } from "@studio/schema";
 
-import FeaturedRecipes from "components/FeaturedRecipes";
-import InformationTab from "components/InformationTab";
-import AppCard from "components/AppCard";
-import { useNextSanityImage } from "next-sanity-image";
 import RecipeCard from "components/RecipeCard";
+import { useAppUser } from "hooks";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Props {
   frontpage: FrontpageWithRecipes;
 }
 
 const Home: NextPage<Props> = ({ frontpage }) => {
+  const { user } = useAppUser();
+
+  const [favorites, setFavorites] = useState<Array<string>>(
+    user?.favorites?.map((f) => f._ref) || []
+  );
+  const addFavorite = (recipeId: string) => {
+    if (!isFavorite(recipeId)) {
+      setFavorites((prevFavorites) => [...prevFavorites, recipeId]);
+    }
+  };
+
+  const removeFavorite = (recipeId: string) => {
+    if (isFavorite(recipeId)) {
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((f) => f !== recipeId)
+      );
+    }
+  };
+
+  const isFavorite = useCallback(
+    (recipeId: string): boolean => {
+      return favorites.some((fav) => fav === recipeId);
+    },
+    [favorites]
+  );
+
+  useEffect(() => {
+    if (user && user.favorites) {
+      setFavorites(user.favorites.map((f) => f._ref));
+    }
+  }, [user?.favorites]);
+
   return (
     <>
       <Head>
         <title>Forsiden | DrinkJakt</title>
       </Head>
 
-      <div className="container mx-auto py-5">
-        <div className="grid grid-cols-5 gap-5">
-          {frontpage.recipes?.map((recipe) => (
-            <RecipeCard key={recipe._id} recipe={recipe} />
-          ))}
+      <section>
+        <div className="container mx-auto pt-10 pb-5">
+          <h1 className="text-6xl text-center font-bold mb-10">
+            Fremhevde drinker
+          </h1>
+
+          <div className="grid grid-cols-5 gap-5">
+            {frontpage.recipes?.map((recipe) => {
+              const favorite = isFavorite(recipe._id);
+
+              return (
+                <RecipeCard
+                  key={recipe._id}
+                  recipe={recipe}
+                  favorite={favorite}
+                  onClickFavorite={() => {
+                    if (user) {
+                      if (favorite) {
+                        removeFavorite(recipe._id);
+                      } else {
+                        addFavorite(recipe._id);
+                      }
+
+                      fetch("/api/profile/favorite", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          userId: user._id,
+                          recipeId: recipe._id,
+                          favorite: !favorite,
+                        }),
+                      })
+                        .then(() => {
+                          if (favorite) {
+                            toast.info(
+                              `${recipe.name} fjernet fra favoritter!`
+                            );
+                          } else {
+                            toast.success(
+                              `${recipe.name} lagt til i favoritter!`
+                            );
+                          }
+                        })
+                        .catch(() => {
+                          if (favorite) {
+                            removeFavorite(recipe._id);
+                          } else {
+                            addFavorite(recipe._id);
+                          }
+                        });
+                    }
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
+      </section>
+
+      <section className="bg-white">
+        <div className="container mx-auto pt-10 pb-5">
+          <h2 className="text-5xl text-center font-bold mb-10">
+            Juicer & Sirup
+          </h2>
+
+          <div className="grid grid-cols-4 gap-5"></div>
+        </div>
+      </section>
     </>
   );
 };
