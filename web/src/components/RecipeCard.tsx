@@ -1,29 +1,28 @@
-import { Recipe, RecipeDetails } from "@studio/schema";
-import clsx from "clsx";
-import { getClient } from "lib/sanity.server";
-import { useNextSanityImage } from "next-sanity-image";
-import Image from "next/image";
-import Link from "next/link";
 import React, { useMemo } from "react";
-
 import {
   FaHeart,
   FaListUl,
-  FaRegHeart,
   FaRegStar,
   FaStar,
   FaStarHalfAlt,
-  FaTachometerAlt,
 } from "react-icons/fa";
-import { formatDifficulty } from "utils";
-import FavoriteButton from "./FavoriteButton";
+
+import Image from "next/image";
+import Link from "next/link";
+
+import { useNextSanityImage } from "next-sanity-image";
+
+import { RecipeDetails } from "@studio/schema";
+
+import clsx from "clsx";
+
+import { getClient } from "lib/sanity.server";
 
 export interface RecipeCardProps {
   recipe: RecipeDetails;
 
   highRes?: boolean;
 
-  showFavorite?: boolean;
   favorite?: boolean;
   onClickFavorite?: () => void;
 }
@@ -33,7 +32,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
   highRes,
 
-  showFavorite,
   favorite,
   onClickFavorite,
 }) => {
@@ -60,7 +58,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     }
 
     return 0;
-  }, [recipe.ratings?.length]);
+  }, [recipe.ratings]);
 
   const renderRating = () => {
     if (recipe.ratings) {

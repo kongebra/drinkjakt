@@ -42,7 +42,7 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
       return (
         <div className="d-flex justify-content-center align-items-center mb-3">
           {recipe.tags?.map((item) => (
-            <div>{item._ref}</div>
+            <div key={item._ref}>{item._ref}</div>
           ))}
         </div>
       );

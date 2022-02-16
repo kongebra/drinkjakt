@@ -1,16 +1,18 @@
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 
 import { groq } from "next-sanity";
 
+import type { FrontpageWithRecipes } from "@studio/schema";
+
 import { getClient } from "lib/sanity.server";
 
-import { FrontpageWithRecipes } from "@studio/schema";
-
 import RecipeCard from "components/RecipeCard";
+
 import { useAppUser } from "hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
 
 interface Props {
   frontpage: FrontpageWithRecipes;
@@ -47,7 +49,7 @@ const Home: NextPage<Props> = ({ frontpage }) => {
     if (user && user.favorites) {
       setFavorites(user.favorites.map((f) => f._ref));
     }
-  }, [user?.favorites]);
+  }, [user, user?.favorites]);
 
   return (
     <>
@@ -70,6 +72,7 @@ const Home: NextPage<Props> = ({ frontpage }) => {
                   key={recipe._id}
                   recipe={recipe}
                   favorite={favorite}
+                  // highRes
                   onClickFavorite={() => {
                     if (user) {
                       if (favorite) {
