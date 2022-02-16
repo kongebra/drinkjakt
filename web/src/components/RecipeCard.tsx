@@ -146,13 +146,16 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
               onClickFavorite && onClickFavorite();
             }}
             className="bg-none border-none p-0 m-0"
-            title={`Legg til i favoritter`}
+            title={favorite ? `Fjern fra favoritter` : `Legg til i favoritter`}
+            aria-label={
+              favorite ? `Fjern fra favoritter` : `Legg til i favoritter`
+            }
           >
             <FaHeart
               size={24}
               className={clsx(
                 favorite
-                  ? "fill-red-500 hover:fill-slate-400"
+                  ? "fill-red-500 hover:fill-red-900"
                   : "fill-slate-300 hover:fill-slate-400",
                 "transition-colors"
               )}
