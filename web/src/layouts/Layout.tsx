@@ -19,7 +19,7 @@ const Layout: React.FC = ({ children }) => {
     <div className="flex flex-col min-h-screen">
       <Navbar navItems={navItems} />
 
-      <main className="flex flex-auto flex-col">{children}</main>
+      <main className="flex flex-auto flex-col bg-gray-200">{children}</main>
 
       <Footer />
     </div>
