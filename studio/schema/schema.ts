@@ -126,31 +126,7 @@ export interface Recipe extends SanityDocument {
    *
    *
    */
-  ingredients: Array<
-    SanityKeyed<{
-      _type: "ingredients";
-      /**
-       * Ingredient — `reference`
-       *
-       *
-       */
-      ingredient: SanityReference<Ingredient>;
-
-      /**
-       * Amount — `number`
-       *
-       *
-       */
-      amount: number;
-
-      /**
-       * Unit — `string`
-       *
-       *
-       */
-      unit: string;
-    }>
-  >;
+  ingredients: Array<SanityKeyed<RecipeIngredient>>;
 
   /**
    * Instructions — `blockContent`
@@ -436,6 +412,30 @@ export type BlockContent = Array<
       hotspot?: SanityImageHotspot;
     }>
 >;
+
+export type RecipeIngredient = {
+  _type: "recipeIngredient";
+  /**
+   * Ingredient — `reference`
+   *
+   *
+   */
+  ingredient: SanityReference<Ingredient>;
+
+  /**
+   * Amount — `number`
+   *
+   *
+   */
+  amount: number;
+
+  /**
+   * Unit — `string`
+   *
+   *
+   */
+  unit: string;
+};
 
 export type Documents =
   | Frontpage
