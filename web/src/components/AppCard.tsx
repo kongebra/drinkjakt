@@ -12,6 +12,7 @@ import {
   FaStarHalfAlt,
   FaTachometerAlt,
 } from "react-icons/fa";
+import { formatDifficulty } from "utils";
 
 export interface AppCardProps {
   title: string;
@@ -21,7 +22,7 @@ export interface AppCardProps {
   };
 
   rating?: number;
-  difficulty: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
   ingredients: Array<string>;
 
   tall?: boolean;
@@ -108,12 +109,16 @@ const AppCard: React.FC<AppCardProps> = ({
           >
             <dd className="flex gap-1 align-items-center">
               <FaTachometerAlt />
-              {difficulty}
+              <span className="leading-none">
+                {formatDifficulty(difficulty, true)}
+              </span>
             </dd>
 
             <dd className="flex gap-1 align-items-center">
               <FaListUl />
-              {ingredients.length} ingredienser
+              <span className="leading-none">
+                {ingredients.length} ingredienser
+              </span>
             </dd>
 
             {ingredients.map((ingredient) => (
