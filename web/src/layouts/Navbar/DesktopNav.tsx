@@ -14,8 +14,8 @@ const DesktopNav = ({ navItems }: Props) => {
     <div className="hidden sm:block sm:ml-6">
       <div className="flex space-x-4">
         {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-        {navItems.map((item) => (
-          <Link href={item.href}>
+        {navItems.map((item, index) => (
+          <Link key={`${item.href}_${index}`} href={item.href}>
             <a
               className={
                 router.asPath === item.href

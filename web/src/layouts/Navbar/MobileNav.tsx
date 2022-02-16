@@ -20,8 +20,8 @@ const MobileNav = ({ navItems }: Props) => {
     >
       <div className="px-2 pt-2 pb-3 space-y-1">
         {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-        {navItems.map((item) => (
-          <Link href={item.href}>
+        {navItems.map((item, index) => (
+          <Link key={`${item.href}_${index}`} href={item.href}>
             <a
               className={
                 router.asPath === item.href
