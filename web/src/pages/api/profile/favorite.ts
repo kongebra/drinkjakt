@@ -37,7 +37,9 @@ export default async function handler(
       if (alreadyFavorited) {
         // already favorite, and like to favorite it again (just chill)
         if (favorite) {
-          return res.status(204);
+          return res
+            .status(200)
+            .json({ message: "recipe was already favorite" });
         }
 
         const unsetResponse = await client
@@ -50,7 +52,9 @@ export default async function handler(
 
       // recipe is not fav from before, and we want to unlike it, just drop any other actions
       if (favorite === false) {
-        return res.status(204);
+        return res
+          .status(200)
+          .json({ message: "cannot unfavorite recipe that is not favorited" });
       }
 
       // find recipe
