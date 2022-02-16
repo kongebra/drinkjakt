@@ -1,9 +1,13 @@
 import { capitalizeString } from "./string";
 
 export const formatDifficulty = (
-  difficulty: "beginner" | "intermediate" | "advanced",
+  difficulty: "beginner" | "intermediate" | "advanced" | undefined,
   capitalize: boolean = false
 ): string => {
+  if (difficulty === undefined) {
+    return "";
+  }
+
   if (capitalize) {
     return capitalizeString(formatDifficulty(difficulty));
   }
