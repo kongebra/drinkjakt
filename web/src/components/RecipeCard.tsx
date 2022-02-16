@@ -112,12 +112,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           </h2>
 
           <dl className={`flex flex-wrap gap-3 mb-0 text-sm font-light `}>
-            <dd className="flex gap-1 align-items-center">
+            {/* <dd className="flex gap-1 align-items-center">
               <FaTachometerAlt />
               <span className="leading-none">
                 {formatDifficulty(recipe.difficulty, true)}
               </span>
-            </dd>
+            </dd> */}
 
             <dd className="flex gap-1 align-items-center">
               <FaListUl />
