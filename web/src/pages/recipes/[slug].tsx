@@ -238,7 +238,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }`;
   const slug = context.params?.slug as string;
 
-  const recipe = await getClient().fetch(query, { slug });
+  const recipe = await getClient().fetch<RecipeDetails>(query, { slug });
 
   if (!recipe) {
     return {
