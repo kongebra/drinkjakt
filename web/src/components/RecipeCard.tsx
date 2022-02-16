@@ -1,4 +1,5 @@
 import { Recipe, RecipeDetails } from "@studio/schema";
+import clsx from "clsx";
 import { getClient } from "lib/sanity.server";
 import { useNextSanityImage } from "next-sanity-image";
 import Image from "next/image";
@@ -91,9 +92,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     <Link href={`/recipes/${recipe?.slug?.current}`}>
       <a
         title={recipe.name}
-        className="bg-white rounded shadow overflow-hidden cursor-pointer mb-3 group"
+        className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow overflow-hidden cursor-pointer mb-3 relative group"
       >
-        <div className="max-h-40 relative overflow-hidden">
+        <div className="max-h-64 relative overflow-hidden">
           <Image
             {...imageProps}
             alt={recipe.name}
@@ -106,7 +107,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           {renderRating()}
 
           <h2
-            className={`text-lg font-bold mb-3 group-hover:text-sky-500 group-hover:underline`}
+            className={`text-lg font-bold mb-3 group-hover:text-sky-500 group-hover:underline transition-all`}
           >
             {recipe.name}
           </h2>
@@ -115,7 +116,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             {/* <dd className="flex gap-1 align-items-center">
               <FaTachometerAlt />
               <span className="leading-none">
-                {formatDifficulty(recipe.difficulty, true)}
+              {formatDifficulty(recipe.difficulty, true)}
               </span>
             </dd> */}
 
@@ -135,6 +136,28 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
               </dt>
             ))}
           </dl>
+        </div>
+
+        <div className="absolute top-0 right-4 h-12 w-10 bg-white rounded-b-xl flex justify-center items-end pb-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onClickFavorite && onClickFavorite();
+            }}
+            className="bg-none border-none p-0 m-0"
+            title={`Legg til i favoritter`}
+          >
+            <FaHeart
+              size={24}
+              className={clsx(
+                favorite
+                  ? "fill-red-500 hover:fill-slate-400"
+                  : "fill-slate-300 hover:fill-slate-400",
+                "transition-colors"
+              )}
+            />
+          </button>
         </div>
       </a>
     </Link>
