@@ -1,0 +1,24 @@
+name: WebApp CI
+
+on: [push]
+
+env:
+  AZURE_WEBAPP_NAME: ""
+  AZURE_WEBAPP_PACKAGE_PATH: ""
+  NODE_VERSION: "16.x"
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@main
+
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
