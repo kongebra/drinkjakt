@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  NODE_VERSION: "16.x"
+
 jobs:
   build:
     name: "Build"
@@ -17,10 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Node.js version
+      - name: Set up Node.js version ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: "Studio: yarn install & codegen"
         run: |
@@ -44,8 +47,6 @@ jobs:
           AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-
-          NODE_ENV: production
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
