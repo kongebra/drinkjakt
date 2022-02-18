@@ -32,8 +32,8 @@ jobs:
         with:
           context: web
           push: true
-          tags: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          build-args: |
+          tags: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+          secrets: |
             NEXT_PUBLIC_SANITY_DATASET=${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
             NEXT_PUBLIC_SANITY_PROJECT_ID=${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
             SANITY_API_TOKEN=${{ secrets.SANITY_API_TOKEN }}
@@ -47,5 +47,6 @@ jobs:
       - uses: azure/webapps-deploy@v2
         with:
           app-name: "drinkjakt"
+          slot-name: "Production"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          images: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
