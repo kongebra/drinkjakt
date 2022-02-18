@@ -1,6 +1,9 @@
 name: WebApp CI
 
-on: [push]
+on:
+  push:
+    paths:
+      - "web/**"
 
 env:
   AZURE_WEBAPP_NAME: "drinkjakt"
