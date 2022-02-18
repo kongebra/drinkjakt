@@ -17,17 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/cache@v2
-        with:
-          path: |
-            "studio/node_modules"
-            "web/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
+          cache: "yarn"
+          cache-dependency-path: |
+            web/yarn.lock
+            studio/yarn.lock
 
       - name: "Studio: yarn install & codegen"
         run: |
