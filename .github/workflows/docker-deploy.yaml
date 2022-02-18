@@ -32,7 +32,9 @@ jobs:
         with:
           context: web
           push: true
-          tags: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+          tags: |
+            ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+            ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:latest
           secrets: |
             NEXT_PUBLIC_SANITY_DATASET=${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
             NEXT_PUBLIC_SANITY_PROJECT_ID=${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
