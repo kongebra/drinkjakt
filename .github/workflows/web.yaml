@@ -6,6 +6,16 @@ env:
   AZURE_WEBAPP_NAME: "drinkjakt"
   AZURE_WEBAPP_PACKAGE_PATH: "web"
   NODE_VERSION: "16.x"
+  NEXT_PUBLIC_SANITY_DATASET: ${{ secret.NEXT_PUBLIC_SANITY_DATASET }}
+  NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secret.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+  SANITY_API_TOKEN: ${{ secret.SANITY_API_TOKEN }}
+  SANITY_PREVIEW_SECRET: ${{ secret.SANITY_PREVIEW_SECRET }}
+
+  AUTH0_SECRET: ${{ secret.AUTH0_SECRET }}
+  AUTH0_BASE_URL: ${{ secret.AUTH0_BASE_URL }}
+  AUTH0_ISSUER_BASE_URL: ${{ secret.AUTH0_ISSUER_BASE_URL }}
+  AUTH0_CLIENT_ID: ${{ secret.AUTH0_CLIENT_ID }}
+  AUTH0_CLIENT_SECRET: ${{ secret.AUTH0_CLIENT_SECRET }}
 
 jobs:
   build:
@@ -25,17 +35,6 @@ jobs:
           npm install
           npm run build
         working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        env:
-          NEXT_PUBLIC_SANITY_DATASET: ${{ secret.NEXT_PUBLIC_SANITY_DATASET }}
-          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secret.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-          SANITY_API_TOKEN: ${{ secret.SANITY_API_TOKEN }}
-          SANITY_PREVIEW_SECRET: ${{ secret.SANITY_PREVIEW_SECRET }}
-
-          AUTH0_SECRET: ${{ secret.AUTH0_SECRET }}
-          AUTH0_BASE_URL: ${{ secret.AUTH0_BASE_URL }}
-          AUTH0_ISSUER_BASE_URL: ${{ secret.AUTH0_ISSUER_BASE_URL }}
-          AUTH0_CLIENT_ID: ${{ secret.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secret.AUTH0_CLIENT_SECRET }}
 
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
