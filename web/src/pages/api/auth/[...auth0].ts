@@ -4,7 +4,7 @@ import { groq } from "next-sanity";
 
 import { getClient } from "lib/sanity.server";
 
-const afterCallback: AfterCallback = async (req, res, session, state) => {
+const afterCallback: AfterCallback = async (_req, _res, session, _state) => {
   const { user } = session;
 
   // get client

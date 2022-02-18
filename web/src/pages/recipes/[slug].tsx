@@ -8,16 +8,9 @@ import { groq } from "next-sanity";
 import { getClient } from "lib/sanity.server";
 import { RecipeDetails } from "@studio/schema";
 import Head from "next/head";
-import { urlFor } from "lib/sanity";
 import { useNextSanityImage } from "next-sanity-image";
 import Image from "next/image";
-import {
-  FaCalendar,
-  FaCalendarAlt,
-  FaCartPlus,
-  FaRegCalendarAlt,
-  FaRegHeart,
-} from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 import Rating from "components/Rating";
 
 import BlockContent from "@sanity/block-content-to-react";
@@ -162,7 +155,7 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
 
                 {/* Instructions */}
                 <BlockContent
-                  blocks={recipe.instructions}
+                  blocks={recipe.instructions || []}
                   serializers={serializer}
                 />
 

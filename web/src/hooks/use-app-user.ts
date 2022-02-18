@@ -1,8 +1,8 @@
-import { UserProfile, useUser } from "@auth0/nextjs-auth0";
+import { useUser } from "@auth0/nextjs-auth0";
 import { User } from "@studio/schema";
 import { getClient } from "lib/sanity.server";
 import { groq } from "next-sanity";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useAppUser() {
   const { user: authUser } = useUser();
@@ -24,7 +24,7 @@ export function useAppUser() {
         .catch(() => setError("Could not fetch user."))
         .finally(() => setIsLoading(false));
     }
-  }, [authUser?.sub]);
+  }, [authUser?.sub, query]);
 
   return { user, isLoading, error };
 }

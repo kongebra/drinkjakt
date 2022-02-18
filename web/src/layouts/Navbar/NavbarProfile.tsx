@@ -1,7 +1,7 @@
-import { useUser } from "@auth0/nextjs-auth0";
 import clsx from "clsx";
 import { useAppUser } from "hooks";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
@@ -47,10 +47,13 @@ const NavbarProfile = () => {
           onClick={toggle}
         >
           <span className="sr-only">Åpne bruker meny</span>
-          <img
+          <Image
             className="h-8 w-8 rounded-full"
-            src={user.picture}
+            // TODO: Add a placeholder image
+            src={user.picture || ""}
             alt={`${user.firstName} ${user.lastName}`}
+            width={32}
+            height={32}
           />
         </button>
       </div>
