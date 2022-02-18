@@ -63,8 +63,8 @@ const Home: NextPage<Props> = ({ frontpage }) => {
             Fremhevde drinker
           </h1>
 
-          <div className="grid grid-cols-5 gap-5">
-            {frontpage.recipes?.map((recipe) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-5 sm:px-0 gap-5">
+            {frontpage.recipes?.slice(0, 4).map((recipe) => {
               const favorite = isFavorite(recipe._id);
 
               return (
