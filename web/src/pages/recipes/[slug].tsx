@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 
 import { groq } from "next-sanity";
@@ -18,16 +18,17 @@ import {
   FaRegCalendarAlt,
   FaRegHeart,
 } from "react-icons/fa";
+import Rating from "components/Rating";
 
-interface Props {
-  recipe: RecipeDetails;
-}
+import BlockContent from "@sanity/block-content-to-react";
+import serializer from "lib/serializer";
+
+type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const RecipePage: React.FC<Props> = ({ recipe }) => {
   const router = useRouter();
 
-  const imageProps = useNextSanityImage(getClient(), recipe.image!);
-  const displayImageProps = useNextSanityImage(getClient(), recipe.image!, {
+  const imageProps = useNextSanityImage(getClient(), recipe.image, {
     imageBuilder: (builder, options) => {
       return builder
         .width(1920)
@@ -37,19 +38,19 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
     },
   });
 
-  const renderTags = () => {
-    if (recipe.tags) {
-      return (
-        <div className="d-flex justify-content-center align-items-center mb-3">
-          {recipe.tags?.map((item) => (
-            <div key={item._ref}>{item._ref}</div>
-          ))}
-        </div>
-      );
-    }
+  // const renderTags = () => {
+  //   if (recipe.tags) {
+  //     return (
+  //       <div className="d-flex justify-content-center align-items-center mb-3">
+  //         {recipe.tags?.map((item) => (
+  //           <div key={item._ref}>{item._ref}</div>
+  //         ))}
+  //       </div>
+  //     );
+  //   }
 
-    return null;
-  };
+  //   return null;
+  // };
 
   return (
     <>
@@ -85,117 +86,91 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
         <title>{recipe.name} | DrinkJakt</title>
       </Head>
 
-      <section>
-        <div className="container">
-          <div className="row">
-            <Image {...displayImageProps} alt={recipe.name} />
+      <section className="mb-3">
+        <div className="container mx-auto">
+          <div className="-mx-10">
+            <Image {...imageProps} alt={recipe.name} />
           </div>
         </div>
       </section>
 
-      <section className="p-4">
-        <div className="container">
-          <div className="d-flex gap-3 px-4">
-            <div>
-              <div className="bg-white p-3 rounded-5 mb-3 d-flex flex-column gap-3">
-                <div className="d-flex align-items-center gap-3">
+      <section className="mb-3">
+        <div className="container mx-auto">
+          <div className="flex gap-3">
+            {/* Left side (narrow) */}
+            <div className="min-w-[16rem] flex flex-col gap-3">
+              {/* Buttons */}
+              <div className="bg-white rounded-5 p-6 flex flex-col gap-3">
+                <div className="flex items-center gap-5">
                   <button
                     type="button"
-                    className="btn btn-primary"
-                    style={{ width: "64px", height: "64px", padding: "0" }}
+                    className="bg-teal-500 hover:bg-teal-700 transition-colors text-white rounded-5 w-16 h-16 flex justify-center items-center"
                   >
                     <FaRegHeart size={24} />
                   </button>
-                  <span>Lagre</span>
-                </div>
-
-                <div className="d-flex align-items-center gap-3">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    style={{ width: "64px", height: "64px", padding: "0" }}
-                  >
-                    <FaCartPlus size={24} />
-                  </button>
-                  <span>Legg i handlelisten</span>
-                </div>
-
-                <div className="d-flex align-items-center gap-3">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    style={{ width: "64px", height: "64px", padding: "0" }}
-                  >
-                    <FaRegCalendarAlt size={24} />
-                  </button>
-                  <span>Legg i ukeplanen</span>
+                  <span className="font-semibold">Lagre</span>
                 </div>
               </div>
 
-              <div className="bg-white p-3 rounded-5 mb-3">
-                <h2 className="text-center fs-5 mb-3">Ingredienser</h2>
+              {/* Ingredients */}
+              <div className="bg-white rounded-5 p-6 flex flex-col gap-3">
+                <h2 className="text-xl font-bold text-center mb-3">
+                  Ingredienser
+                </h2>
 
-                <div className="border-top pt-3">
-                  <ul style={{ listStyle: "none", padding: 0 }}>
-                    {recipe.ingredients?.map((item, index) => (
-                      <li key={item.ingredient?._id}>
-                        <span
-                          data-amount={item.amount}
-                        >{`${item.amount} `}</span>
-                        <span data-unit={item.unit}>{`${item.unit} `}</span>
-                        <span>{item.ingredient?.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="border-top pt-3">
-                  <p>dele lenke</p>
-                  <p>send på epost</p>
-                </div>
+                <ul className="list-none pt-5 flex flex-col gap-3 border-t border-t-gray-300">
+                  {recipe.ingredients?.map((item) => (
+                    <li key={item.ingredient?._id} className="font-semibold">
+                      <span data-amount={item.amount}>{`${item.amount} `}</span>
+                      <span data-unit={item.unit}>{`${item.unit} `}</span>
+                      <span>{item.ingredient?.name}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
-            <div className="flex-fill bg-white p-3 rounded-5 mb-3">
-              <div className="text-center">
-                {renderTags()}
+            {/* Right side (main content) */}
+            <div className="flex-auto flex flex-col gap-3">
+              {/* Main Content (Recipe) */}
+              <div className="bg-white rounded-5 p-6">
+                {/* Recipe Title */}
+                <h1 className="text-6xl font-semibold uppercase text-center mb-5 mt-5">
+                  {recipe.name}
+                </h1>
 
-                <h1>{recipe.name}</h1>
+                {/* Rating & Comments count */}
+                <div className="flex justify-center items-center gap-5 mb-5">
+                  {/* Open modal to rate recipe */}
+                  <button
+                    type="button"
+                    className="text-lg font-semibold flex items-center gap-1"
+                    onClick={() => {
+                      console.log("TODO: Implement Rating Modal");
+                    }}
+                  >
+                    <Rating size={18} />
+                    <span className="leading-none">
+                      {`(${recipe.ratings?.length || 0})`}
+                    </span>
+                  </button>
 
-                <p>rating (1) kommentarer (0)</p>
+                  {/* TODO: Implement comments to backend */}
+                  {/* Scroll down to comment section */}
+                  {/* <a href="#comments"></a> */}
+                </div>
 
-                <p>description</p>
-              </div>
+                {/* Instructions */}
+                <BlockContent
+                  blocks={recipe.instructions}
+                  serializers={serializer}
+                />
 
-              <div className="border-top border-bottom py-3 mb-3 d-flex justify-content-center gap-3">
-                <span>tid</span>
-                <span>vansklighetsgrad</span>
-              </div>
-
-              <div className="py-3">
-                <p>
-                  <strong>Slik gjør du</strong>
-                </p>
-                <ul>
-                  <li>step 1</li>
-                  <li>step 2</li>
-                  <li>step 3</li>
-                  <li>step ...</li>
-                </ul>
-              </div>
-
-              <div className="border-top pt-3 text-center">
-                <p>vurder oppskrift</p>
-                <p>rating knapp (stjerner)</p>
+                {/* Rate recipe (5 start clickable) */}
+                {/* TODO: Create this component */}
               </div>
             </div>
           </div>
-
-          {/* <div className="d-flex px-4">
-            <div className="bg-white p-3 rounded-5 flex-fill">
-              <h3 className="text-center">Kommentarer</h3>
-            </div>
-          </div> */}
         </div>
       </section>
     </>
@@ -208,20 +183,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: paths.map((slug: string) => `/recipes/${slug}`),
-    fallback: true,
+    fallback: false,
   };
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const query = groq`*[_type == "recipe" && slug.current == $slug][0] {
+const query = groq`*[_type == "recipe" && slug.current == $slug][0] {
     _id,
     name,
     slug,
     difficulty,
     glass->{
-    name,
-    slug,
-  },
+      name,
+      slug,
+    },
     ice->{
       name,
       slug
@@ -229,13 +203,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
     image,
     ingredients[] {
       ingredient->{
-      name,
-      slug,
-    },
+        _id,
+        name,
+        slug,
+      },
       amount,
       unit
     },
+    instructions
   }`;
+
+export const getStaticProps: GetStaticProps<{ recipe: RecipeDetails }> = async (
+  context
+) => {
   const slug = context.params?.slug as string;
 
   const recipe = await getClient().fetch<RecipeDetails>(query, { slug });
@@ -250,6 +230,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       recipe,
     },
+    revalidate: 10,
   };
 };
 
