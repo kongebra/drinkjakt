@@ -1,0 +1,49 @@
+name: Docker Build & Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  ACR_HOSTNAME: "drinkjakt.azurecr.io"
+  IMAGE_NAME: "drinkjakt-web"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@main
+
+      - name: "Docker Login"
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR_HOSTNAME }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: "Docker Build & Push"
+        uses: docker/build-push-action@v2
+        with:
+          context: web
+          push: true
+          tags: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        env:
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          SANITY_PREVIEW_SECRET: ${{ secrets.SANITY_PREVIEW_SECRET }}
+
+          AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
+          AUTH0_BASE_URL: ${{ secrets.AUTH0_BASE_URL }}
+          AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: "drinkjakt"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: ${{ env.ACR_HOSTNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}

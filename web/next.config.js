@@ -19,6 +19,10 @@ const nextConfig = {
   images: {
     domains: ["lh3.googleusercontent.com", "cdn.sanity.io"],
   },
+
+  experimental: {
+    outputStandalone: true,
+  },
 };
 
 module.exports = nextConfig;

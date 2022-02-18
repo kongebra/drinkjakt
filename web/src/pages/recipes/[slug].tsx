@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { groq } from "next-sanity";
 
 import { getClient } from "lib/sanity.server";
-import { RecipeDetails } from "@studio/schema";
+import { RecipeDetails } from "schema";
 import Head from "next/head";
 import { useNextSanityImage } from "next-sanity-image";
 import Image from "next/image";

@@ -1,12 +1,12 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - DrinkJakt
+name: NextJS - Web App - Build & Deploy
 
 on:
   push:
     branches:
-      - main
+      - develop
   workflow_dispatch:
 
 env:
@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    name: "Build"
+    name: "Build & Deploy"
     runs-on: ubuntu-latest
 
     steps:

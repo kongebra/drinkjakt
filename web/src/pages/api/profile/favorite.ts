@@ -1,4 +1,4 @@
-import { Recipe, SanityKeyedReference, User } from "@studio/schema";
+import { Recipe, SanityKeyedReference, User } from "schema";
 import { getClient } from "lib/sanity.server";
 import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";

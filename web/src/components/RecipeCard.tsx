@@ -12,7 +12,7 @@ import Link from "next/link";
 
 import { useNextSanityImage } from "next-sanity-image";
 
-import { RecipeDetails } from "@studio/schema";
+import { RecipeDetails } from "schema";
 
 import clsx from "clsx";
 

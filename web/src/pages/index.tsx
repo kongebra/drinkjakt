@@ -6,7 +6,7 @@ import Head from "next/head";
 
 import { groq } from "next-sanity";
 
-import type { FrontpageWithRecipes } from "@studio/schema";
+import type { FrontpageWithRecipes } from "schema";
 
 import { getClient } from "lib/sanity.server";
 
