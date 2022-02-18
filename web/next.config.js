@@ -6,12 +6,12 @@ const path = require("path");
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-  swcMinify: true,
-  compiler: {
-    removeConsole: {
-      exclude: ["error"],
-    },
-  },
+  // swcMinify: true,
+  // compiler: {
+  //   removeConsole: {
+  //     exclude: ["error"],
+  //   },
+  // },
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
