@@ -20,11 +20,17 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: npm install and build
+      - name: "Studio: yarn install & codegen"
         run: |
-          npm install
-          npm run build
-        working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          yarn install
+          yarn codegen
+        working-directory: studio
+
+      - name: "Web: yarn install & build"
+        run: |
+          yarn install
+          yarn build
+        working-directory: web
         env:
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -37,9 +43,9 @@ jobs:
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
 
-      - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      # - name: Deploy to Azure WebApp
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: ${{ env.AZURE_WEBAPP_NAME }}
+      #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      #     package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
