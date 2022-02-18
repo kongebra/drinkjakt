@@ -26,6 +26,14 @@
       "@studio/*": ["../../studio/*"]
     }
   },
-  "exclude": ["dist", ".next", "out", "next.config.js"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/server/index.js"]
+  "exclude": [
+    "dist",
+    ".next",
+    "out",
+    "next.config.js",
+    "postcss.config.js",
+    "tailwind.config.js",
+    "src/server/index.js"
+  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }
