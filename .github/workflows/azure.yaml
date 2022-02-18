@@ -57,8 +57,7 @@ jobs:
         with:
           name: node-app
           path: |
-            web/dist
-            web/.next
+            web
 
   deploy:
     name: "Deploy"
