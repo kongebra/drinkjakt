@@ -27,7 +27,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-800 text-white">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center flex-wrap py-3 my-4">
           <div className="flex items-center gap-2">
             <Link href="/" passHref>
@@ -37,6 +37,7 @@ const Footer = () => {
             <a
               href="https://kongebra.net"
               target="_blank"
+              rel="noreferrer"
               className="hover:underline"
             >
               kongebra.net
@@ -46,7 +47,7 @@ const Footer = () => {
           <ul className="flex justify-end list-none gap-3">
             {socials.map((item, index) => (
               <li key={index}>
-                <a href={item.href} target="_blank">
+                <a href={item.href} target="_blank" rel="noreferrer">
                   {item.icon}
                 </a>
               </li>
