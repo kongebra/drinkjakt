@@ -20,11 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
 
-    "incremental": true,
-
-    "paths": {
-      "@studio/*": ["schema/*"]
-    }
+    "incremental": true
   },
   "exclude": [
     "dist",
