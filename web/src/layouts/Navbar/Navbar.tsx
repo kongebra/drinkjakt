@@ -52,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             {/* BRAND / LOGO */}
             <div className="w-1/3 lg:w-auto flex lg:flex-initial justify-center lg:justify-start items-center">
               <Link href="/">
-                <a className="text-3xl font-bold">
+                <a className="text-xl lg:text-3xl font-bold">
                   <span>Drink</span>
                   <span className="text-teal-500 font-extrabold">Jakt</span>
                 </a>
