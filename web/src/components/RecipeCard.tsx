@@ -63,7 +63,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   const renderRating = () => {
     if (recipe.ratings) {
       return (
-        <div className={`flex gap-1 text-sky-500 mb-2`}>
+        <div className={`flex gap-1 text-teal-500 mb-2`}>
           {[0, 1, 2, 3, 4].map((value) => {
             const key = `${recipe._id}_${value}`;
 
@@ -105,7 +105,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           {renderRating()}
 
           <h2
-            className={`text-lg font-bold mb-3 group-hover:text-sky-500 group-hover:underline transition-all`}
+            className={`text-lg font-bold mb-3 group-hover:text-teal-500 group-hover:underline transition-all`}
           >
             {recipe.name}
           </h2>
