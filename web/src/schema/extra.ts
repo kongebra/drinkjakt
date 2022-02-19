@@ -1,4 +1,12 @@
-import { Frontpage, Glass, Ingredient, Recipe, Rating, Ice } from "./schema";
+import {
+  Frontpage,
+  Glass,
+  Ingredient,
+  Recipe,
+  Rating,
+  Ice,
+  User,
+} from "./schema";
 
 export interface RecipeWithRatings extends Recipe {
   ratings?: Array<Rating>;
@@ -18,4 +26,8 @@ export interface RecipeDetails
     amount: number;
     unit: string;
   }>;
+}
+
+export interface UserWithFavorites extends Omit<User, "favorites"> {
+  favorites?: Array<RecipeDetails>;
 }
