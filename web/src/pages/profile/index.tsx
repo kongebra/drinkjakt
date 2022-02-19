@@ -2,7 +2,7 @@ import React from "react";
 
 const ProfilePage = () => {
   return (
-    <div className="container">
+    <div className="container mx-auto">
       <h1>Profile</h1>
     </div>
   );
