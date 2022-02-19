@@ -1,49 +1,71 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 import { groq } from "next-sanity";
+import { useNextSanityImage } from "next-sanity-image";
 
 import { getClient } from "lib/sanity.server";
-import { RecipeDetails } from "schema";
-import Head from "next/head";
-import { useNextSanityImage } from "next-sanity-image";
-import Image from "next/image";
-import { FaRegHeart } from "react-icons/fa";
-import Rating from "components/Rating";
 
-import BlockContent from "@sanity/block-content-to-react";
-import serializer from "lib/serializer";
+import { RecipeDetails } from "schema";
+
+import { useAppUser } from "hooks";
+
+import RecipeDetailsComponent from "components/RecipeDetails";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const RecipePage: React.FC<Props> = ({ recipe }) => {
   const router = useRouter();
 
+  const { user } = useAppUser();
+
   const imageProps = useNextSanityImage(getClient(), recipe.image, {
-    imageBuilder: (builder, options) => {
-      return builder
-        .width(1920)
-        .height(1080)
-        .fit("clip")
-        .quality(options.quality || 100);
+    imageBuilder: (builder, _options) => {
+      return builder.width(1920).height(1920).fit("crop").crop("focalpoint");
     },
   });
 
-  // const renderTags = () => {
-  //   if (recipe.tags) {
-  //     return (
-  //       <div className="d-flex justify-content-center align-items-center mb-3">
-  //         {recipe.tags?.map((item) => (
-  //           <div key={item._ref}>{item._ref}</div>
-  //         ))}
-  //       </div>
-  //     );
-  //   }
+  const [favorite, setFavorite] = useState<boolean>(
+    user?.favorites?.some((f) => f._ref === recipe._id) || false
+  );
 
-  //   return null;
-  // };
+  useEffect(() => {
+    if (user && user.favorites) {
+      setFavorite(user.favorites.some((f) => f._ref === recipe._id));
+    }
+  }, [recipe._id, user]);
+
+  const handleOnClickFavorite = () => {
+    if (user) {
+      setFavorite((prev) => !prev);
+
+      fetch("/api/profile/favorite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          recipeId: recipe._id,
+          favorite: !favorite,
+        }),
+      })
+        .then(() => {
+          if (favorite) {
+            toast.info("Oppskrift fjernet fra favoritter.");
+          } else {
+            toast.success("Oppskrift lagt til i favoritter.");
+          }
+        })
+        .catch(() => {
+          setFavorite((prev) => prev);
+        });
+    }
+  };
 
   return (
     <>
@@ -79,93 +101,11 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
         <title>{recipe.name} | DrinkJakt</title>
       </Head>
 
-      <section className="mb-3">
-        <div className="container mx-auto">
-          <div className="-mx-10">
-            <Image {...imageProps} alt={recipe.name} />
-          </div>
-        </div>
-      </section>
-
-      <section className="mb-3">
-        <div className="container mx-auto">
-          <div className="flex gap-3">
-            {/* Left side (narrow) */}
-            <div className="min-w-[16rem] flex flex-col gap-3">
-              {/* Buttons */}
-              <div className="bg-white rounded-5 p-6 flex flex-col gap-3">
-                <div className="flex items-center gap-5">
-                  <button
-                    type="button"
-                    className="bg-teal-500 hover:bg-teal-700 transition-colors text-white rounded-5 w-16 h-16 flex justify-center items-center"
-                  >
-                    <FaRegHeart size={24} />
-                  </button>
-                  <span className="font-semibold">Lagre</span>
-                </div>
-              </div>
-
-              {/* Ingredients */}
-              <div className="bg-white rounded-5 p-6 flex flex-col gap-3">
-                <h2 className="text-xl font-bold text-center mb-3">
-                  Ingredienser
-                </h2>
-
-                <ul className="list-none pt-5 flex flex-col gap-3 border-t border-t-gray-300">
-                  {recipe.ingredients?.map((item) => (
-                    <li key={item.ingredient?._id} className="font-semibold">
-                      <span data-amount={item.amount}>{`${item.amount} `}</span>
-                      <span data-unit={item.unit}>{`${item.unit} `}</span>
-                      <span>{item.ingredient?.name}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Right side (main content) */}
-            <div className="flex-auto flex flex-col gap-3">
-              {/* Main Content (Recipe) */}
-              <div className="bg-white rounded-5 p-6">
-                {/* Recipe Title */}
-                <h1 className="text-6xl font-semibold uppercase text-center mb-5 mt-5">
-                  {recipe.name}
-                </h1>
-
-                {/* Rating & Comments count */}
-                <div className="flex justify-center items-center gap-5 mb-5">
-                  {/* Open modal to rate recipe */}
-                  <button
-                    type="button"
-                    className="text-lg font-semibold flex items-center gap-1"
-                    onClick={() => {
-                      console.log("TODO: Implement Rating Modal");
-                    }}
-                  >
-                    <Rating size={18} />
-                    <span className="leading-none">
-                      {`(${recipe.ratings?.length || 0})`}
-                    </span>
-                  </button>
-
-                  {/* TODO: Implement comments to backend */}
-                  {/* Scroll down to comment section */}
-                  {/* <a href="#comments"></a> */}
-                </div>
-
-                {/* Instructions */}
-                <BlockContent
-                  blocks={recipe.instructions || []}
-                  serializers={serializer}
-                />
-
-                {/* Rate recipe (5 start clickable) */}
-                {/* TODO: Create this component */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <RecipeDetailsComponent
+        recipe={recipe}
+        favorite={favorite}
+        onFavorite={handleOnClickFavorite}
+      />
     </>
   );
 };
