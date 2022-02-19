@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -91,25 +90,13 @@ const Home: NextPage<Props> = ({ frontpage }) => {
                           recipeId: recipe._id,
                           favorite: !favorite,
                         }),
-                      })
-                        .then(() => {
-                          if (favorite) {
-                            toast.info(
-                              `${recipe.name} fjernet fra favoritter!`
-                            );
-                          } else {
-                            toast.success(
-                              `${recipe.name} lagt til i favoritter!`
-                            );
-                          }
-                        })
-                        .catch(() => {
-                          if (favorite) {
-                            removeFavorite(recipe._id);
-                          } else {
-                            addFavorite(recipe._id);
-                          }
-                        });
+                      }).catch(() => {
+                        if (favorite) {
+                          removeFavorite(recipe._id);
+                        } else {
+                          addFavorite(recipe._id);
+                        }
+                      });
                     }
                   }}
                 />
