@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0";
-import { User } from "@studio/schema";
+import { User } from "schema";
 import { getClient } from "lib/sanity.server";
 import { groq } from "next-sanity";
 import { useEffect, useState } from "react";
