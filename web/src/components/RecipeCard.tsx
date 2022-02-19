@@ -63,7 +63,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   const renderRating = () => {
     if (recipe.ratings) {
       return (
-        <div className={`flex gap-1 text-teal-500 mb-2`}>
+        <div className={`flex gap-1 items-center text-teal-500 mb-2`}>
           {[0, 1, 2, 3, 4].map((value) => {
             const key = `${recipe._id}_${value}`;
 
@@ -79,6 +79,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
             return <FaRegStar key={key} />;
           })}
+          <span className="text-slate-900">{`(${
+            recipe.ratings.length || 0
+          })`}</span>
         </div>
       );
     }
@@ -87,7 +90,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   };
 
   return (
-    <Link href={`/recipes/${recipe?.slug?.current}`}>
+    <Link href={`/recipes/${encodeURIComponent(recipe?.slug?.current || "")}`}>
       <a
         title={recipe.name}
         className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow overflow-hidden cursor-pointer mb-3 relative group"
