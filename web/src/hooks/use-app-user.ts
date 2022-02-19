@@ -8,7 +8,7 @@ export function useAppUser() {
   const { user: authUser } = useUser();
 
   const [user, setUser] = useState<User | undefined>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
   const query = groq`*[_type == "user" && auth0_sub == $sub][0]`;
@@ -16,6 +16,7 @@ export function useAppUser() {
   useEffect(() => {
     if (authUser?.sub) {
       setIsLoading(true);
+
       getClient()
         .fetch<User>(query, { sub: authUser?.sub })
         .then((res) => {
