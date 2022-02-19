@@ -1,20 +1,12 @@
-import clsx from "clsx";
-import { useAppUser } from "hooks";
+import React from "react";
+
 import Link from "next/link";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
-import { useOnClickOutside } from "usehooks-ts";
+
+import { useAppUser } from "hooks";
 
 const NavbarProfile = () => {
   const { user, isLoading, error } = useAppUser();
-
-  const [expanded, setExpanded] = useState<boolean>(false);
-  const toggle = () => setExpanded((prev) => !prev);
-
-  const ref = useRef(null);
-  useOnClickOutside(ref, () => {
-    setExpanded(false);
-  });
 
   if (isLoading) {
     return null;
@@ -36,17 +28,13 @@ const NavbarProfile = () => {
   }
 
   return (
-    <div className="ml-3 relative" ref={ref}>
-      <div>
-        <button
-          type="button"
-          className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-          id="user-menu-button"
-          aria-expanded={expanded}
-          aria-haspopup="true"
-          onClick={toggle}
+    <div className="ml-3 relative">
+      <Link href="/profile">
+        <a
+          className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white text-white hover:text-teal-500 uppercase items-center gap-2"
+          title="Gå til din profil"
+          aria-label="Gå til din profil"
         >
-          <span className="sr-only">Åpne bruker meny</span>
           <Image
             className="h-8 w-8 rounded-full"
             // TODO: Add a placeholder image
@@ -55,61 +43,9 @@ const NavbarProfile = () => {
             width={32}
             height={32}
           />
-        </button>
-      </div>
-
-      {/* <!--
-                  Dropdown menu, show/hide based on menu state.
-
-                  Entering: "transition ease-out duration-100"
-                    From: "transform opacity-0 scale-95"
-                    To: "transform opacity-100 scale-100"
-                  Leaving: "transition ease-in duration-75"
-                    From: "transform opacity-100 scale-100"
-                    To: "transform opacity-0 scale-95"
-                --> */}
-      <div
-        className={clsx(
-          expanded ? "" : "hidden",
-          "origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-        )}
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="user-menu-button"
-        tabIndex={-1}
-      >
-        {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
-        <Link href="/profile">
-          <a
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-200"
-            role="menuitem"
-            tabIndex={-1}
-            id="user-menu-item-0"
-          >
-            Din Profil
-          </a>
-        </Link>
-        <Link href="/settings">
-          <a
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-200"
-            role="menuitem"
-            tabIndex={-1}
-            id="user-menu-item-1"
-          >
-            Instillinger
-          </a>
-        </Link>
-        <Link href="/api/auth/logout">
-          <a
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-200"
-            role="menuitem"
-            tabIndex={-1}
-            id="user-menu-item-2"
-          >
-            Logg Ut
-          </a>
-        </Link>
-      </div>
+          Min profil
+        </a>
+      </Link>
     </div>
   );
 };
