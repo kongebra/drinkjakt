@@ -119,38 +119,38 @@ const Home: NextPage<Props> = ({ frontpage }) => {
   );
 };
 
+const query = groq`*[_type == "frontpage"][0] {
+  "recipes": featured_recipes[]->{
+    _id,
+    name,
+    slug,
+    difficulty,
+    glass->{
+      name,
+      slug,
+    },
+    ice->{
+      name,
+      slug
+    },
+    image,
+    ingredients[] {
+      ingredient->{
+        name,
+        slug,
+      },
+      amount,
+      unit
+    },
+    "ratings": *[_type == "rating" && recipe._ref == ^._id] {
+      rating
+    }
+  },
+}`;
+
 export const getStaticProps: GetStaticProps<Props> = async ({
   preview = false,
 }) => {
-  const query = groq`*[_type == "frontpage"][0] {
-    "recipes": featured_recipes[]->{
-      _id,
-      name,
-      slug,
-      difficulty,
-      glass->{
-        name,
-        slug,
-      },
-      ice->{
-        name,
-        slug
-      },
-      image,
-      ingredients[] {
-        ingredient->{
-        name,
-        slug,
-      },
-        amount,
-        unit
-      },
-      "ratings": *[_type == "rating" && recipe._ref == ^._id] {
-        rating
-      }
-    },
-  }`;
-
   const frontpage = await getClient(preview).fetch<FrontpageWithRecipes>(query);
 
   if (!frontpage) {
