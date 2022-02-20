@@ -2,15 +2,16 @@ import React, { createContext, useMemo, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 import clsx from "clsx";
 
 import { FaSearch, FaUser } from "react-icons/fa";
 
 import MobileMenu from "./MobileMenu";
-import { useAppUser } from "hooks";
-import Image from "next/image";
 import DesktopNavItem from "./DesktopNavItem";
+
+import { useAppUser } from "hooks";
 
 export interface NavItem {
   text: string;
@@ -45,9 +46,6 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
 
   const [mobileIsOpen, setMobileIsOpen] = useState(false);
 
-  const desktopHeight = "lg:h-20";
-  const mobileHeight = "3.5rem";
-
   return (
     <NavbarContext.Provider
       value={{
@@ -60,8 +58,8 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
           <div
             className={clsx(
               "flex gap-0 lg:gap-5 items-center justify-between relative",
-              desktopHeight,
-              `h-[${mobileHeight}]`
+              "lg:h-20",
+              `h-[3.5rem]`
             )}
           >
             {/* BRAND / LOGO */}
@@ -76,15 +74,9 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
 
             {/* DESKTOP MENU */}
             <div className="hidden lg:flex items-center grow">
-              <ul className={clsx("flex items-center", desktopHeight)}>
+              <ul className={clsx("flex items-center lg:h-20")}>
                 {mappedNavItems.map((item) => {
-                  return (
-                    <DesktopNavItem
-                      key={item.href}
-                      navItem={item}
-                      height={desktopHeight}
-                    />
-                  );
+                  return <DesktopNavItem key={item.href} navItem={item} />;
                 })}
               </ul>
             </div>
@@ -119,7 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* SEARCH DESKTOP */}
-            <div className={clsx("hidden lg:flex items-center", desktopHeight)}>
+            <div className={clsx("hidden lg:flex items-center lg:h-20")}>
               <form action="/search">
                 <button type="submit">
                   <FaSearch className="z-20 hover:text-teal-500" />
@@ -134,14 +126,12 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* SEARCH MOBILE */}
-            <div
-              className={clsx("w-1/3 lg:hidden flex", `h-[${mobileHeight}]`)}
-            >
+            <div className={clsx("w-1/3 lg:hidden flex", `h-[3.5rem]`)}>
               <Link href="/search">
                 <a
                   className={clsx(
                     "grow bg-teal-800 text-white flex justify-center items-center",
-                    `h-[${mobileHeight}]`
+                    `h-[3.5rem]`
                   )}
                 >
                   <FaSearch size={24} />
@@ -150,7 +140,7 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* MOBILE MENU */}
-            <MobileMenu navItems={mappedNavItems} height={mobileHeight} />
+            <MobileMenu navItems={mappedNavItems} />
           </div>
         </div>
       </nav>

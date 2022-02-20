@@ -9,10 +9,9 @@ import { NavItem } from "./Navbar";
 
 interface Props {
   navItem: NavItem;
-  height: string;
 }
 
-const MobileNavItem: React.FC<Props> = ({ navItem, height }) => {
+const MobileNavItem: React.FC<Props> = ({ navItem }) => {
   const router = useRouter();
 
   const [active, setActive] = useState(false);
@@ -23,12 +22,12 @@ const MobileNavItem: React.FC<Props> = ({ navItem, height }) => {
 
   return (
     <li
-      className={clsx("active:text-teal-500", `h-[${height}]`, {
+      className={clsx("active:text-teal-500", `h-[3.5rem]`, {
         "text-teal-500": active,
       })}
     >
       <Link href={navItem.href}>
-        <a className={clsx("flex navItems-center", `h-[${height}]`)}>
+        <a className={clsx("flex navItems-center", `h-[3.5rem]`)}>
           <span>{navItem.text}</span>
         </a>
       </Link>

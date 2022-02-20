@@ -1,7 +1,10 @@
+import React, { useContext } from "react";
+
 import clsx from "clsx";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+
 import { NavbarContext, NavItem } from "./Navbar";
 
 interface Props {
