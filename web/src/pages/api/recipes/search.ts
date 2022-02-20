@@ -38,6 +38,15 @@ export default async function handler(
     image,
 
     "ingredientsCount": count(ingredients),
+     ingredients[] {
+      ingredient->{
+        _id,
+        name,
+        slug,
+      },
+      amount,
+      unit
+    },
 
     "ratings": *[_type == "rating" && references(^._id)] {
         rating
