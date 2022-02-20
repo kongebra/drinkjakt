@@ -1,46 +1,36 @@
-import RecipeCard from "components/RecipeCard";
-import { PageData } from "models/page-data";
+import React, { useCallback, useEffect } from "react";
+
 import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import RecipeCard from "components/RecipeCard";
+
+import { PageData } from "models/page-data";
+
 import { RecipeDetails } from "schema";
 
+import { usePagination, useFavorites } from "hooks";
+
+import SimplePagination from "components/SimplePagination";
+
 const RecipesPage = () => {
-  const router = useRouter();
+  const { toggleFavorite, isFavorite } = useFavorites();
 
-  const [pageData, setPageData] = useState<
-    PageData<RecipeDetails> | undefined
-  >();
+  const pagination = usePagination<RecipeDetails>({
+    initialPageSize: 9,
+  });
 
-  const currentPage = useMemo(() => {
-    if (pageData) {
-      if (pageData.pagination.offset && pageData.pagination.limit) {
-        return pageData.pagination.offset / pageData.pagination.limit;
-      }
-    }
-
-    return 1;
-  }, [pageData]);
-  const totalPages = useMemo(() => {
-    if (pageData && pageData.pagination.total && pageData.pagination.limit) {
-      return pageData.pagination.total / pageData.pagination.limit;
-    }
-
-    return 1;
-  }, [pageData]);
-
-  const [recipes, setRecipes] = useState<Array<RecipeDetails>>([]);
+  const setData = pagination.setData;
 
   const fetchData = useCallback(() => {
-    fetch("/api/recipes/search?limit=3")
+    console.log("fetch data");
+    // TODO: When we get MANY recipes, we maybe need to do some server-side pagination
+    fetch(`/api/recipes/search`)
       .then((res) => res.json())
       .then((data: PageData<RecipeDetails>) => {
-        setPageData(data);
-        setRecipes(data.data);
+        setData(data.data);
       })
       .catch(() => {});
-  }, []);
+  }, [setData]);
 
   useEffect(() => {
     fetchData();
@@ -61,25 +51,22 @@ const RecipesPage = () => {
           </div> */}
 
           <div className="grow">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-5 sm:px-0 gap-5">
-              {recipes.map((recipe) => {
-                return <RecipeCard key={recipe._id} recipe={recipe} />;
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-5 sm:px-0 gap-5 mb-5">
+              {pagination.page.map((recipe) => {
+                return (
+                  <RecipeCard
+                    key={recipe._id}
+                    recipe={recipe}
+                    favorite={isFavorite(recipe)}
+                    onClickFavorite={() => {
+                      toggleFavorite(recipe);
+                    }}
+                  />
+                );
               })}
             </div>
 
-            <div className="flex justify-center gap-3">
-              {pageData?.links.prev && (
-                <Link href={pageData?.links.prev}>
-                  <a>{"<"}</a>
-                </Link>
-              )}
-              <span>{`Side ${currentPage} av ${totalPages}`}</span>
-              {pageData?.links.next && (
-                <Link href={pageData?.links.next}>
-                  <a>{">"}</a>
-                </Link>
-              )}
-            </div>
+            <SimplePagination {...pagination} />
           </div>
         </div>
       </div>
