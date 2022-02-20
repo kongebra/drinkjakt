@@ -1,14 +1,28 @@
 import { useCallback, useMemo, useState } from "react";
 
-export interface UsePaginationProps<T extends object> {
+export interface UsePaginationProps<T> {
   initialData?: Array<T>;
   initialPageIndex?: number;
   initialPageSize?: number;
 }
 
-export function usePagination<T extends object>(
+export interface UsePaginationReturnType<T> {
+  setData: (data: Array<T>) => void;
+  page: Array<T>;
+  pageSize: number;
+  setPageSize: (pageSize: number) => void;
+  pageIndex: number;
+  pageCount: number;
+  nextPage: () => void;
+  previousPage: () => void;
+  gotoPage: (pageIndex: number) => void;
+  canNextPage: boolean;
+  canPreviousPage: boolean;
+}
+
+export function usePagination<T>(
   options?: UsePaginationProps<T>
-) {
+): UsePaginationReturnType<T> {
   const [data, setData] = useState<Array<T>>(options?.initialData || []);
   const [pageIndex, setPageIndex] = useState<number>(
     options?.initialPageIndex || 0
