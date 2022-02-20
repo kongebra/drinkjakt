@@ -22,7 +22,6 @@ const RecipesPage = () => {
   const setData = pagination.setData;
 
   const fetchData = useCallback(() => {
-    console.log("fetch data");
     // TODO: When we get MANY recipes, we maybe need to do some server-side pagination
     fetch(`/api/recipes/search`)
       .then((res) => res.json())
