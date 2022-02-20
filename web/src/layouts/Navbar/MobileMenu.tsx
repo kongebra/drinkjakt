@@ -52,7 +52,7 @@ const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
           `absolute left-0 w-full transition-all duration-500 ease-in-out z-50 overflow-hidden`,
           `top-[${height}]`,
           {
-            "max-h-[100vh]": value,
+            "max-h-screen": value,
             "max-h-0": !value,
           }
         )}
