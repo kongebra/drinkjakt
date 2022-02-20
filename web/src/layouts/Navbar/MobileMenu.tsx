@@ -2,24 +2,24 @@ import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 import clsx from "clsx";
 import { useBoolean } from "usehooks-ts";
 
-import { FaBars, FaTimes, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 import { useAppUser } from "hooks";
 
 import { NavItem } from "./Navbar";
+import MobileNavItem from "./MobileNavItem";
+import MobileMenuButton from "./MobileMenuButton";
 
 interface Props {
   navItems: Array<NavItem>;
+  height: string;
 }
 
-const MobileMenu: React.FC<Props> = ({ navItems }) => {
-  const router = useRouter();
-
+const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
   const { user } = useAppUser();
 
   const { value, toggle } = useBoolean();
@@ -29,46 +29,28 @@ const MobileMenu: React.FC<Props> = ({ navItems }) => {
   return (
     <>
       <div className="lg:hidden grow flex">
-        <button
-          type="button"
-          className={clsx(
-            "grow h-16 flex justify-center items-center gap-3",
-            value
-              ? `${backgroundColor} text-teal-500`
-              : "bg-teal-500 text-teal-50"
-          )}
+        <MobileMenuButton
+          height={height}
+          backgroundColor={backgroundColor}
+          show={value}
           onClick={toggle}
-          aria-label="Åpne meny"
-        >
-          <span className="uppercase text-2xl">{value ? "Lukk" : "Meny"}</span>
-          {value ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
+        />
       </div>
 
       <div
         className={clsx(
-          `absolute left-0 top-16 w-full transition-all duration-300 ease-in-out z-50 overflow-hidden`,
+          `absolute left-0 w-full transition-all duration-500 ease-in-out z-50 overflow-hidden`,
+          `top-[${height}]`,
           {
-            "h-96": value,
-            "h-0": !value,
+            "max-h-screen": value,
+            "max-h-0": !value,
           }
         )}
       >
         <div className={`flex flex-col gap-5 px-5 py-5 ${backgroundColor}`}>
           <ul className="flex flex-col text-xl uppercase">
             {navItems.map((item) => (
-              <li
-                key={item.href}
-                className={clsx("h-14 active:text-teal-500", {
-                  "text-teal-500": item.href === router.asPath,
-                })}
-              >
-                <Link href={item.href}>
-                  <a className="h-14 flex items-center">
-                    <span>{item.text}</span>
-                  </a>
-                </Link>
-              </li>
+              <MobileNavItem key={item.href} navItem={item} height={height} />
             ))}
           </ul>
 

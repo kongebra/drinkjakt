@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useMemo, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,10 +10,12 @@ import { FaSearch, FaUser } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { useAppUser } from "hooks";
 import Image from "next/image";
+import DesktopNavItem from "./DesktopNavItem";
 
 export interface NavItem {
   text: string;
   href: string;
+  active?: boolean;
 }
 
 export interface NavbarProps {
@@ -37,7 +39,14 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
 
   const { user, isLoading } = useAppUser();
 
+  const mappedNavItems = useMemo<Array<NavItem>>(() => {
+    return navItems.map((x) => ({ ...x, active: router.asPath === x.href }));
+  }, [navItems, router.asPath]);
+
   const [mobileIsOpen, setMobileIsOpen] = useState(false);
+
+  const desktopHeight = "lg:h-20";
+  const mobileHeight = "3.5rem";
 
   return (
     <NavbarContext.Provider
@@ -48,11 +57,17 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
     >
       <nav className="bg-white">
         <div className="lg:container lg:mx-auto">
-          <div className="flex gap-0 lg:gap-5 items-center justify-between h-16 lg:h-20 relative">
+          <div
+            className={clsx(
+              "flex gap-0 lg:gap-5 items-center justify-between relative",
+              desktopHeight,
+              `h-[${mobileHeight}]`
+            )}
+          >
             {/* BRAND / LOGO */}
             <div className="w-1/3 lg:w-auto flex lg:flex-initial justify-center lg:justify-start items-center">
               <Link href="/">
-                <a className="text-3xl font-bold">
+                <a className="text-xl lg:text-3xl font-bold">
                   <span>Drink</span>
                   <span className="text-teal-500 font-extrabold">Jakt</span>
                 </a>
@@ -61,21 +76,16 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
 
             {/* DESKTOP MENU */}
             <div className="hidden lg:flex items-center grow">
-              <ul className="flex items-center h-20">
-                {navItems.map((item) => (
-                  <li
-                    key={item.href}
-                    className={clsx("hover:text-teal-500 uppercase h-20", {
-                      "text-teal-500": router.asPath === item.href,
-                    })}
-                  >
-                    <Link href={item.href}>
-                      <a className="flex items-center px-5 h-20">
-                        <span>{item.text}</span>
-                      </a>
-                    </Link>
-                  </li>
-                ))}
+              <ul className={clsx("flex items-center", desktopHeight)}>
+                {mappedNavItems.map((item) => {
+                  return (
+                    <DesktopNavItem
+                      key={item.href}
+                      navItem={item}
+                      height={desktopHeight}
+                    />
+                  );
+                })}
               </ul>
             </div>
 
@@ -109,7 +119,7 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* SEARCH DESKTOP */}
-            <div className="hidden lg:flex items-center h-20">
+            <div className={clsx("hidden lg:flex items-center", desktopHeight)}>
               <form action="/search">
                 <button type="submit">
                   <FaSearch className="z-20 hover:text-teal-500" />
@@ -124,16 +134,23 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* SEARCH MOBILE */}
-            <div className="w-1/3 h-16 lg:hidden flex">
+            <div
+              className={clsx("w-1/3 lg:hidden flex", `h-[${mobileHeight}]`)}
+            >
               <Link href="/search">
-                <a className="grow h-16 bg-teal-800 text-white flex justify-center items-center">
+                <a
+                  className={clsx(
+                    "grow bg-teal-800 text-white flex justify-center items-center",
+                    `h-[${mobileHeight}]`
+                  )}
+                >
                   <FaSearch size={24} />
                 </a>
               </Link>
             </div>
 
             {/* MOBILE MENU */}
-            <MobileMenu navItems={navItems} />
+            <MobileMenu navItems={mappedNavItems} height={mobileHeight} />
           </div>
         </div>
       </nav>
