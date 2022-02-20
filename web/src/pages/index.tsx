@@ -124,15 +124,7 @@ const query = groq`*[_type == "frontpage"][0] {
     _id,
     name,
     slug,
-    difficulty,
-    glass->{
-      name,
-      slug,
-    },
-    ice->{
-      name,
-      slug
-    },
+
     image,
     ingredients[] {
       ingredient->{
@@ -142,6 +134,16 @@ const query = groq`*[_type == "frontpage"][0] {
       amount,
       unit
     },
+
+    glass->{
+      name,
+      slug,
+    },
+    ice->{
+      name,
+      slug
+    },
+    
     "ratings": *[_type == "rating" && recipe._ref == ^._id] {
       rating
     }
