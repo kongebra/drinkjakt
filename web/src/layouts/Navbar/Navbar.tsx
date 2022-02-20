@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useMemo, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,10 +10,12 @@ import { FaSearch, FaUser } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { useAppUser } from "hooks";
 import Image from "next/image";
+import DesktopNavItem from "./DesktopNavItem";
 
 export interface NavItem {
   text: string;
   href: string;
+  active?: boolean;
 }
 
 export interface NavbarProps {
@@ -36,6 +38,10 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
   const router = useRouter();
 
   const { user, isLoading } = useAppUser();
+
+  const mappedNavItems = useMemo<Array<NavItem>>(() => {
+    return navItems.map((x) => ({ ...x, active: router.asPath === x.href }));
+  }, [navItems, router.asPath]);
 
   const [mobileIsOpen, setMobileIsOpen] = useState(false);
 
@@ -71,29 +77,15 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             {/* DESKTOP MENU */}
             <div className="hidden lg:flex items-center grow">
               <ul className={clsx("flex items-center", desktopHeight)}>
-                {navItems.map((item) => (
-                  <li
-                    key={item.href}
-                    className={clsx(
-                      "hover:text-teal-500 uppercase",
-                      desktopHeight,
-                      {
-                        "text-teal-500": router.asPath === item.href,
-                      }
-                    )}
-                  >
-                    <Link href={item.href}>
-                      <a
-                        className={clsx(
-                          "flex items-center px-5",
-                          desktopHeight
-                        )}
-                      >
-                        <span>{item.text}</span>
-                      </a>
-                    </Link>
-                  </li>
-                ))}
+                {mappedNavItems.map((item) => {
+                  return (
+                    <DesktopNavItem
+                      key={item.href}
+                      navItem={item}
+                      height={desktopHeight}
+                    />
+                  );
+                })}
               </ul>
             </div>
 
@@ -158,7 +150,7 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* MOBILE MENU */}
-            <MobileMenu navItems={navItems} height={mobileHeight} />
+            <MobileMenu navItems={mappedNavItems} height={mobileHeight} />
           </div>
         </div>
       </nav>

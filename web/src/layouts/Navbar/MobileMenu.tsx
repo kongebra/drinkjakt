@@ -2,16 +2,17 @@ import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 import clsx from "clsx";
 import { useBoolean } from "usehooks-ts";
 
-import { FaBars, FaTimes, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 import { useAppUser } from "hooks";
 
 import { NavItem } from "./Navbar";
+import MobileNavItem from "./MobileNavItem";
+import MobileMenuButton from "./MobileMenuButton";
 
 interface Props {
   navItems: Array<NavItem>;
@@ -19,8 +20,6 @@ interface Props {
 }
 
 const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
-  const router = useRouter();
-
   const { user } = useAppUser();
 
   const { value, toggle } = useBoolean();
@@ -30,21 +29,12 @@ const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
   return (
     <>
       <div className="lg:hidden grow flex">
-        <button
-          type="button"
-          className={clsx(
-            "grow flex justify-center items-center gap-3",
-            `h-[${height}]`,
-            value
-              ? `${backgroundColor} text-teal-500`
-              : "bg-teal-500 text-teal-50"
-          )}
+        <MobileMenuButton
+          height={height}
+          backgroundColor={backgroundColor}
+          show={value}
           onClick={toggle}
-          aria-label="Åpne meny"
-        >
-          <span className="uppercase text-xl">{value ? "Lukk" : "Meny"}</span>
-          {value ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
+        />
       </div>
 
       <div
@@ -60,18 +50,7 @@ const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
         <div className={`flex flex-col gap-5 px-5 py-5 ${backgroundColor}`}>
           <ul className="flex flex-col text-xl uppercase">
             {navItems.map((item) => (
-              <li
-                key={item.href}
-                className={clsx("active:text-teal-500", `h-[${height}]`, {
-                  "text-teal-500": item.href === router.asPath,
-                })}
-              >
-                <Link href={item.href}>
-                  <a className={clsx("flex items-center", `h-[${height}]`)}>
-                    <span>{item.text}</span>
-                  </a>
-                </Link>
-              </li>
+              <MobileNavItem key={item.href} navItem={item} height={height} />
             ))}
           </ul>
 
