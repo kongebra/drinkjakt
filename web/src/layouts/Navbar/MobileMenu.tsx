@@ -15,9 +15,10 @@ import { NavItem } from "./Navbar";
 
 interface Props {
   navItems: Array<NavItem>;
+  height: string;
 }
 
-const MobileMenu: React.FC<Props> = ({ navItems }) => {
+const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
   const router = useRouter();
 
   const { user } = useAppUser();
@@ -32,7 +33,8 @@ const MobileMenu: React.FC<Props> = ({ navItems }) => {
         <button
           type="button"
           className={clsx(
-            "grow h-16 flex justify-center items-center gap-3",
+            "grow flex justify-center items-center gap-3",
+            `h-[${height}]`,
             value
               ? `${backgroundColor} text-teal-500`
               : "bg-teal-500 text-teal-50"
@@ -40,17 +42,18 @@ const MobileMenu: React.FC<Props> = ({ navItems }) => {
           onClick={toggle}
           aria-label="Åpne meny"
         >
-          <span className="uppercase text-2xl">{value ? "Lukk" : "Meny"}</span>
+          <span className="uppercase text-xl">{value ? "Lukk" : "Meny"}</span>
           {value ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
       </div>
 
       <div
         className={clsx(
-          `absolute left-0 top-16 w-full transition-all duration-300 ease-in-out z-50 overflow-hidden`,
+          `absolute left-0 w-full transition-all duration-500 ease-in-out z-50 overflow-hidden`,
+          `top-[${height}]`,
           {
-            "h-96": value,
-            "h-0": !value,
+            "max-h-[100vh]": value,
+            "max-h-0": !value,
           }
         )}
       >
@@ -59,12 +62,12 @@ const MobileMenu: React.FC<Props> = ({ navItems }) => {
             {navItems.map((item) => (
               <li
                 key={item.href}
-                className={clsx("h-14 active:text-teal-500", {
+                className={clsx("active:text-teal-500", `h-[${height}]`, {
                   "text-teal-500": item.href === router.asPath,
                 })}
               >
                 <Link href={item.href}>
-                  <a className="h-14 flex items-center">
+                  <a className={clsx("flex items-center", `h-[${height}]`)}>
                     <span>{item.text}</span>
                   </a>
                 </Link>
