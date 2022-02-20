@@ -17,6 +17,7 @@ const nextConfig = {
     includePaths: [path.join(__dirname, "styles")],
   },
   images: {
+    loader: "default",
     domains: ["lh3.googleusercontent.com", "cdn.sanity.io"],
   },
 
