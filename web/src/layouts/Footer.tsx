@@ -27,7 +27,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-800 text-white">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-5">
         <div className="flex justify-between items-center flex-wrap py-3 my-4">
           <div className="flex items-center gap-2">
             <Link href="/" passHref>
