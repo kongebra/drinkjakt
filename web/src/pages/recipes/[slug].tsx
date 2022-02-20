@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 
 import { groq } from "next-sanity";
-import { useNextSanityImage } from "next-sanity-image";
 
 import { getClient } from "lib/sanity.server";
 
