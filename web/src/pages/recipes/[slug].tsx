@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 
 import { groq } from "next-sanity";
-import { useNextSanityImage } from "next-sanity-image";
 
 import { getClient } from "lib/sanity.server";
 
@@ -15,6 +14,7 @@ import { RecipeDetails } from "schema";
 import { useAppUser } from "hooks";
 
 import RecipeDetailsComponent from "components/RecipeDetails";
+import { urlFor } from "lib/sanity";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -23,11 +23,8 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
 
   const { user } = useAppUser();
 
-  const imageProps = useNextSanityImage(getClient(), recipe.image, {
-    imageBuilder: (builder, _options) => {
-      return builder.width(1920).height(1920).fit("crop").crop("focalpoint");
-    },
-  });
+  const image = urlFor(recipe.image);
+  const imageUrl = image.url();
 
   const [favorite, setFavorite] = useState<boolean>(
     user?.favorites?.some((f) => f._ref === recipe._id) || false
@@ -83,12 +80,9 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
         {recipe.description && (
           <meta property="og:description" content={recipe.description} />
         )}
-        <meta property="og:image" content={imageProps.src} />
-        <meta property="og:image:width" content={imageProps.width.toString()} />
-        <meta
-          property="og:image:height"
-          content={imageProps.height.toString()}
-        />
+        {imageUrl && <meta property="og:image" content={imageUrl} />}
+        <meta property="og:image:width" content={`${image.options.width}`} />
+        <meta property="og:image:height" content={`${image.options.height}`} />
 
         {recipe?.ingredients?.map((item) => (
           <meta

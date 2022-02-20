@@ -16,41 +16,33 @@ import MobileMenuButton from "./MobileMenuButton";
 
 interface Props {
   navItems: Array<NavItem>;
-  height: string;
 }
 
-const MobileMenu: React.FC<Props> = ({ navItems, height }) => {
+const MobileMenu: React.FC<Props> = ({ navItems }) => {
   const { user } = useAppUser();
 
   const { value, toggle } = useBoolean();
 
-  const backgroundColor = "bg-teal-50";
-
   return (
     <>
       <div className="lg:hidden grow flex">
-        <MobileMenuButton
-          height={height}
-          backgroundColor={backgroundColor}
-          show={value}
-          onClick={toggle}
-        />
+        <MobileMenuButton show={value} onClick={toggle} />
       </div>
 
       <div
         className={clsx(
           `absolute left-0 w-full transition-all duration-500 ease-in-out z-50 overflow-hidden`,
-          `top-[${height}]`,
+          `top-[3.5rem]`,
           {
             "max-h-screen": value,
             "max-h-0": !value,
           }
         )}
       >
-        <div className={`flex flex-col gap-5 px-5 py-5 ${backgroundColor}`}>
+        <div className={`flex flex-col gap-5 px-5 py-5 bg-teal-50`}>
           <ul className="flex flex-col text-xl uppercase">
             {navItems.map((item) => (
-              <MobileNavItem key={item.href} navItem={item} height={height} />
+              <MobileNavItem key={item.href} navItem={item} />
             ))}
           </ul>
 

@@ -35,7 +35,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
     <div>
       <section className="mb-3">
         <div className="container mx-auto">
-          <Image {...imageProps} alt={recipe.name} />
+          <Image {...imageProps} alt={recipe.name} unoptimized />
         </div>
       </section>
 

@@ -1,28 +1,22 @@
-import clsx from "clsx";
 import React from "react";
+
+import clsx from "clsx";
+
 import { FaBars, FaTimes } from "react-icons/fa";
 
 interface Props {
-  height: string;
-  backgroundColor: string;
-
   show: boolean;
   onClick: () => void;
 }
 
-const MobileMenuButton: React.FC<Props> = ({
-  height,
-  backgroundColor,
-  show,
-  onClick,
-}) => {
+const MobileMenuButton: React.FC<Props> = ({ show, onClick }) => {
   return (
     <button
       type="button"
       className={clsx(
         "grow flex justify-center items-center gap-3",
-        `h-[${height}]`,
-        show ? `${backgroundColor} text-teal-500` : "bg-teal-500 text-teal-50"
+        `h-[3.5rem]`,
+        show ? `bg-teal-50 text-teal-500` : "bg-teal-500 text-teal-50"
       )}
       onClick={onClick}
       aria-label="Åpne meny"
