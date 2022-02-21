@@ -32,8 +32,6 @@ export default async function handler(
         (x) => x._ref === recipeId
       );
 
-      console.log({ alreadyFavorited, favorite });
-
       if (alreadyFavorited) {
         // already favorite, and like to favorite it again (just chill)
         if (favorite) {

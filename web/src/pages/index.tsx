@@ -27,7 +27,7 @@ const Home: NextPage<Props> = ({ frontpage }) => {
       <section>
         <div className="container mx-auto pt-10 pb-5">
           <h1 className="text-6xl text-center font-bold mb-10">
-            Fremhevde drinker
+            Fremhevede drinker
           </h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-5 sm:px-0 gap-5">

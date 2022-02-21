@@ -15,18 +15,11 @@ export default {
       name: "amount",
       title: "Amount",
       type: "number",
-      validation: (Rule) => Rule.required(),
-      codegen: { required: true },
     },
     {
       name: "unit",
       title: "Unit",
       type: "string",
-      validation: (Rule) => Rule.required(),
-      codegen: { required: true },
-      options: {
-        // TODO: Make list?
-      },
     },
   ],
   preview: {

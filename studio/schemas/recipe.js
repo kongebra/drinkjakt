@@ -44,6 +44,7 @@ export default {
         isUnique: isUniqueAcrossType("recipe"),
         auto: true,
       },
+      codegen: { required: true },
     },
     {
       name: "description",
@@ -51,6 +52,18 @@ export default {
       type: "text",
       group: "base",
       rows: 3,
+    },
+    {
+      name: "viewCount",
+      title: "View Count",
+      description:
+        "Count how many times the recipe has been viewed (View on the details page)",
+      type: "number",
+      group: "base",
+      readOnly: true,
+      initialValue: 0,
+      validation: (Rule) => Rule.positive(),
+      codegen: { required: true },
     },
     {
       name: "image",

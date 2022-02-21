@@ -7,11 +7,13 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import BlockContent from "@sanity/block-content-to-react";
 
 import Rating from "components/Rating";
+import RecipeRatingButtonModal from "components/RecipeRatingButtonModal";
 
 import { getClient } from "lib/sanity.server";
 import serializer from "lib/serializer";
 
 import { RecipeDetails } from "schema/extra";
+import { useRatings } from "hooks";
 
 export interface RecipeDetailsProps {
   recipe: RecipeDetails;
@@ -25,6 +27,8 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
   favorite,
   onFavorite,
 }) => {
+  const { rating, count, userRating } = useRatings(recipe._id);
+
   const imageProps = useNextSanityImage(getClient(), recipe.image, {
     imageBuilder: (builder, _options) => {
       return builder.width(1920).height(1920).fit("crop").crop("focalpoint");
@@ -82,8 +86,14 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
                 <ul className="list-none pt-5 flex flex-col gap-3 border-t border-t-gray-300">
                   {recipe.ingredients?.map((item) => (
                     <li key={item.ingredient?._id} className="font-semibold">
-                      <span data-amount={item.amount}>{`${item.amount} `}</span>
-                      <span data-unit={item.unit}>{`${item.unit} `}</span>
+                      {item.amount && (
+                        <span
+                          data-amount={item.amount}
+                        >{`${item.amount} `}</span>
+                      )}
+                      {item.unit && (
+                        <span data-unit={item.unit}>{`${item.unit} `}</span>
+                      )}
                       <span>{item.ingredient?.name}</span>
                     </li>
                   ))}
@@ -94,9 +104,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
             {/* Right side (main content) */}
             <div className="flex-auto flex flex-col gap-3">
               {/* Main Content (Recipe) */}
-              <div className="bg-white rounded-5 p-6">
+              <div className="bg-white rounded-5 px-6 py-10">
                 {/* Recipe Title */}
-                <h1 className="text-6xl font-semibold uppercase text-center mb-5 mt-5">
+                <h1 className="text-6xl font-semibold uppercase text-center mb-5">
                   {recipe.name}
                 </h1>
 
@@ -110,10 +120,8 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
                       console.log("TODO: Implement Rating Modal");
                     }}
                   >
-                    <Rating size={18} />
-                    <span className="leading-none">
-                      {`(${recipe.ratings?.length || 0})`}
-                    </span>
+                    <Rating size={18} rating={rating} />
+                    <span className="leading-none">{`(${count})`}</span>
                   </button>
 
                   {/* TODO: Implement comments to backend */}
@@ -125,10 +133,25 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
                 <BlockContent
                   blocks={recipe.instructions || []}
                   serializers={serializer}
+                  className="mb-5"
                 />
 
-                {/* Rate recipe (5 start clickable) */}
-                {/* TODO: Create this component */}
+                <div className="py-5">
+                  <hr />
+                </div>
+
+                {/* Rate recipe */}
+                <div className="flex flex-col items-center gap-2 pt-5">
+                  <h2 className="text-lg uppercase font-semibold">
+                    Vurder oppskriften
+                  </h2>
+                  {userRating !== 0 && (
+                    <p className="text-gray-700">
+                      Vil du ombestemme deg? GI en ny vurdering!
+                    </p>
+                  )}
+                  <RecipeRatingButtonModal recipe={recipe} />
+                </div>
               </div>
             </div>
           </div>
