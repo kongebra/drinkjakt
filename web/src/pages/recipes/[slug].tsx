@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import type {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+} from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
 import { groq } from "next-sanity";
 
 import { getClient } from "lib/sanity.server";
+import { urlFor } from "lib/sanity";
 
 import { RecipeDetails } from "schema";
 
 import { useAppUser } from "hooks";
 
 import RecipeDetailsComponent from "components/RecipeDetails";
-import { urlFor } from "lib/sanity";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -51,13 +54,7 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
           favorite: !favorite,
         }),
       })
-        .then(() => {
-          if (favorite) {
-            toast.info("Oppskrift fjernet fra favoritter.");
-          } else {
-            toast.success("Oppskrift lagt til i favoritter.");
-          }
-        })
+        .then(() => {})
         .catch(() => {
           setFavorite((prev) => prev);
         });
@@ -137,7 +134,10 @@ const query = groq`*[_type == "recipe" && slug.current == $slug][0] {
       amount,
       unit
     },
-    instructions
+    instructions,
+    "ratings": *[_type == "rating" && recipe._ref == ^._id] {
+      rating
+    }
   }`;
 
 export const getStaticProps: GetStaticProps<{ recipe: RecipeDetails }> = async (
