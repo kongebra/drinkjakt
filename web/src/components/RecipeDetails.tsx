@@ -82,8 +82,14 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
                 <ul className="list-none pt-5 flex flex-col gap-3 border-t border-t-gray-300">
                   {recipe.ingredients?.map((item) => (
                     <li key={item.ingredient?._id} className="font-semibold">
-                      <span data-amount={item.amount}>{`${item.amount} `}</span>
-                      <span data-unit={item.unit}>{`${item.unit} `}</span>
+                      {item.amount && (
+                        <span
+                          data-amount={item.amount}
+                        >{`${item.amount} `}</span>
+                      )}
+                      {item.unit && (
+                        <span data-unit={item.unit}>{`${item.unit} `}</span>
+                      )}
                       <span>{item.ingredient?.name}</span>
                     </li>
                   ))}
