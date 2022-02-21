@@ -44,6 +44,7 @@ export default {
         isUnique: isUniqueAcrossType("recipe"),
         auto: true,
       },
+      codegen: { required: true },
     },
     {
       name: "description",
@@ -62,6 +63,7 @@ export default {
       readOnly: true,
       initialValue: 0,
       validation: (Rule) => Rule.positive(),
+      codegen: { required: true },
     },
     {
       name: "image",
