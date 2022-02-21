@@ -53,6 +53,17 @@ export default {
       rows: 3,
     },
     {
+      name: "viewCount",
+      title: "View Count",
+      description:
+        "Count how many times the recipe has been viewed (View on the details page)",
+      type: "number",
+      group: "base",
+      readOnly: true,
+      initialValue: 0,
+      validation: (Rule) => Rule.positive(),
+    },
+    {
       name: "image",
       title: "Image",
       type: "image",
