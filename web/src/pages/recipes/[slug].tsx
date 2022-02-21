@@ -115,6 +115,7 @@ const query = groq`*[_type == "recipe" && slug.current == $slug][0] {
     _id,
     name,
     slug,
+    viewCount,
     difficulty,
     glass->{
       name,
@@ -152,6 +153,8 @@ export const getStaticProps: GetStaticProps<{ recipe: RecipeDetails }> = async (
       notFound: true,
     };
   }
+
+  await getClient(true).patch(recipe._id).inc({ viewCount: 1 }).commit();
 
   return {
     props: {
