@@ -166,7 +166,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
                   <h2 className="text-lg uppercase font-semibold">
                     Vurder oppskriften
                   </h2>
-                  {userRating && (
+                  {userRating !== 0 && (
                     <p className="text-gray-700">
                       Vil du ombestemme deg? GI en ny vurdering!
                     </p>
