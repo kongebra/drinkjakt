@@ -12,12 +12,8 @@ const RatingButton: React.FC<RatingButtonProps> = ({
   onClick,
   iconSize = 32,
 }) => {
-  const clampedInitialValue = initialValue
-    ? Math.min(Math.max(initialValue, 0), 5)
-    : 0;
-
-  const [rating, setRating] = useState(clampedInitialValue);
-  const [hover, setHover] = useState(clampedInitialValue);
+  const [rating, setRating] = useState(initialValue || 0);
+  const [hover, setHover] = useState(initialValue || 0);
 
   const renderStar = (value: number) => {
     if (hover >= value) {
