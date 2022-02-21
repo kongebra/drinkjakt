@@ -82,6 +82,13 @@ export interface Recipe extends SanityDocument {
   description?: string;
 
   /**
+   * View Count — `number`
+   *
+   * Count how many times the recipe has been viewed (View on the details page)
+   */
+  viewCount?: number;
+
+  /**
    * Image — `image`
    *
    *
