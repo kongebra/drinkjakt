@@ -10,26 +10,20 @@ import Modal from "./Modal";
 import RatingButton from "./RatingButton";
 
 export interface RecipeRatingButtonModalProps {
-  initialRating?: number;
   recipe: RecipeDetails;
-
-  onRating: () => void;
 }
 
 const RecipeRatingButtonModal: React.FC<RecipeRatingButtonModalProps> = ({
-  initialRating,
   recipe,
-  onRating,
 }) => {
-  const { rateRecipe } = useRatings();
-
-  const [rating, setRating] = useState(initialRating || 0);
+  const { rateRecipe, userRating } = useRatings(recipe._id);
 
   const { value, setTrue, setFalse } = useBoolean(false);
 
+  const [rating, setRating] = useState(0);
+
   const handleOnClick = () => {
-    rateRecipe(recipe._id, rating)?.then(() => {
-      onRating();
+    rateRecipe(rating)?.then(() => {
       setFalse();
     });
   };
@@ -37,12 +31,13 @@ const RecipeRatingButtonModal: React.FC<RecipeRatingButtonModalProps> = ({
   return (
     <>
       <RatingButton
-        initialValue={initialRating}
+        initialValue={userRating}
         onClick={(rating) => {
           setRating(rating);
           setTrue();
         }}
       />
+
       <Modal
         open={value}
         onClose={setFalse}

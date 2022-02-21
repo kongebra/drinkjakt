@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 
 export interface RatingButtonProps {
@@ -8,12 +8,17 @@ export interface RatingButtonProps {
 }
 
 const RatingButton: React.FC<RatingButtonProps> = ({
-  initialValue,
+  initialValue = 0,
   onClick,
   iconSize = 32,
 }) => {
-  const [rating, setRating] = useState(initialValue || 0);
-  const [hover, setHover] = useState(initialValue || 0);
+  const [rating, setRating] = useState(initialValue);
+  const [hover, setHover] = useState(initialValue);
+
+  useEffect(() => {
+    setRating(initialValue);
+    setHover(initialValue);
+  }, [initialValue]);
 
   const renderStar = (value: number) => {
     if (hover >= value) {
