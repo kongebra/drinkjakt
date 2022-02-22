@@ -1,19 +1,24 @@
-import { useState, useCallback, useEffect } from "react";
-import { RecipeDetails } from "schema";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { RecipeDetails, User } from "schema";
 
 import { useAppUser } from "./use-app-user";
 
 export function useFavorites() {
-  const { user } = useAppUser();
+  const { user: appUser } = useAppUser();
 
-  const [favorites, setFavorites] = useState<Array<string>>(
-    user?.favorites?.map((f) => f._ref) || []
+  const [user, setUser] = useState<User | undefined>(appUser);
+
+  useEffect(() => {
+    setUser(appUser);
+  }, [appUser]);
+
+  const favorites = useMemo(
+    () => user?.favorites?.map((x) => x._ref) || [],
+    [user?.favorites]
   );
 
   const addFavorite = (recipe: RecipeDetails) => {
     if (user && !isFavorite(recipe)) {
-      setFavorites((prevFavorites) => [...prevFavorites, recipe._id]);
-
       fetch("/api/profile/favorite", {
         method: "POST",
         headers: {
@@ -24,20 +29,12 @@ export function useFavorites() {
           recipeId: recipe._id,
           favorite: true,
         }),
-      }).catch(() => {
-        setFavorites((prevFavorites) =>
-          prevFavorites.filter((f) => f !== recipe._id)
-        );
       });
     }
   };
 
   const removeFavorite = (recipe: RecipeDetails) => {
     if (user && isFavorite(recipe)) {
-      setFavorites((prevFavorites) =>
-        prevFavorites.filter((f) => f !== recipe._id)
-      );
-
       fetch("/api/profile/favorite", {
         method: "POST",
         headers: {
@@ -48,8 +45,6 @@ export function useFavorites() {
           recipeId: recipe._id,
           favorite: false,
         }),
-      }).catch(() => {
-        setFavorites((prevFavorites) => [...prevFavorites, recipe._id]);
       });
     }
   };
@@ -70,12 +65,6 @@ export function useFavorites() {
     },
     [favorites]
   );
-
-  useEffect(() => {
-    if (user && user.favorites) {
-      setFavorites(user.favorites.map((f) => f._ref));
-    }
-  }, [user, user?.favorites]);
 
   return { favorites, addFavorite, removeFavorite, isFavorite, toggleFavorite };
 }
