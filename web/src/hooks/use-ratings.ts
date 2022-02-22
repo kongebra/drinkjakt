@@ -4,12 +4,18 @@ import { groq } from "next-sanity";
 
 import { getClient } from "lib/sanity.server";
 
-import { Rating } from "schema";
+import { Rating, User } from "schema";
 
 import { useAppUser } from "./use-app-user";
 
 export function useRatings(recipeId: string) {
-  const { user } = useAppUser();
+  const { user: appUser } = useAppUser();
+
+  const [user, setUser] = useState<User | undefined>(appUser);
+
+  useEffect(() => {
+    setUser(appUser);
+  }, [appUser]);
 
   const [refetchData, setRefetchData] = useState(false);
   const [userRating, setUserRating] = useState(0);
