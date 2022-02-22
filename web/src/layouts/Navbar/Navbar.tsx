@@ -82,9 +82,9 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
             </div>
 
             {/* PROFILE */}
-            <div className="hidden lg:block">
-              {!isLoading &&
-                (user ? (
+            {isLoading ? null : (
+              <div className="hidden lg:block">
+                {user ? (
                   <Link href="/profile">
                     <a className="flex items-center gap-3">
                       <Image
@@ -107,8 +107,9 @@ const Navbar: React.FC<NavbarProps> = ({ navItems }) => {
                       <span className="uppercase font-semibold">Logg Inn</span>
                     </a>
                   </Link>
-                ))}
-            </div>
+                )}
+              </div>
+            )}
 
             {/* SEARCH DESKTOP */}
             <div className={clsx("hidden lg:flex items-center lg:h-20")}>
