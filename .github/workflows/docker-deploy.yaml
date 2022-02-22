@@ -13,6 +13,7 @@ on:
 env:
   ACR_HOSTNAME: "drinkjakt.azurecr.io"
   IMAGE_NAME: "drinkjakt-web"
+  NODE_VERSION: "16.x"
 
 jobs:
   build:
@@ -21,6 +22,11 @@ jobs:
     steps:
       - name: "Checkout Code"
         uses: actions/checkout@main
+
+      - name: Set up Node.js version ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: "Set up Docker Buildx"
         uses: docker/setup-buildx-action@v1
@@ -50,6 +56,15 @@ jobs:
             AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}
             AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}
             AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}
+
+      - name: "Studio: yarn install, build & deploy"
+        run: |
+          yarn install
+          yarn build
+          yarn deploy
+        working-directory: studio
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
 
       - uses: azure/webapps-deploy@v2
         with:
