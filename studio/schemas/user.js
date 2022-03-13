@@ -24,6 +24,7 @@ export default {
       name: "email",
       title: "Email",
       type: "string",
+      validation: (Rule) => Rule.required(),
       codegen: { required: true },
     },
     {
