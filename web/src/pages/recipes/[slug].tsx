@@ -7,17 +7,27 @@ import type {
 } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Image from "next/image";
 
 import { groq } from "next-sanity";
+import { useNextSanityImage } from "next-sanity-image";
 
 import { getClient } from "lib/sanity.server";
-import { urlFor } from "lib/sanity";
+import serializer from "lib/serializer";
 
 import { RecipeDetails } from "schema";
 
-import { useAppUser } from "hooks";
+import { useAppUser, useRatings } from "hooks";
 
-import RecipeDetailsComponent from "components/RecipeDetails";
+import { FaHeart } from "react-icons/fa";
+
+import BlockContent from "@sanity/block-content-to-react";
+
+import Button from "components/Button";
+import FavoriteHeart from "components/FavoriteHeart";
+import RatingButton from "components/RatingButton";
+import Portions from "components/Portions";
+import Link from "next/link";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -26,12 +36,15 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
 
   const { user } = useAppUser();
 
-  const image = urlFor(recipe.image);
-  const imageUrl = image.url();
-
   const [favorite, setFavorite] = useState<boolean>(
     user?.favorites?.some((f) => f._ref === recipe._id) || false
   );
+
+  const { rating, count } = useRatings(recipe._id);
+
+  const [portions, setPortions] = useState<number>(1);
+
+  const imageProps = useNextSanityImage(getClient(), recipe.image);
 
   useEffect(() => {
     if (user && user.favorites) {
@@ -61,6 +74,10 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
     }
   };
 
+  const calculateAmount = (amount: number, multiplier: number) => {
+    return amount * multiplier;
+  };
+
   return (
     <>
       <Head>
@@ -77,9 +94,9 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
         {recipe.description && (
           <meta property="og:description" content={recipe.description} />
         )}
-        {imageUrl && <meta property="og:image" content={imageUrl} />}
-        <meta property="og:image:width" content={`${image.options.width}`} />
-        <meta property="og:image:height" content={`${image.options.height}`} />
+        <meta property="og:image" content={imageProps.src} />
+        <meta property="og:image:width" content={`${imageProps.width}`} />
+        <meta property="og:image:height" content={`${imageProps.height}`} />
 
         {recipe?.ingredients?.map((item) => (
           <meta
@@ -92,11 +109,133 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
         <title>{recipe.name} | DrinkJakt</title>
       </Head>
 
-      <RecipeDetailsComponent
-        recipe={recipe}
-        favorite={favorite}
-        onFavorite={handleOnClickFavorite}
-      />
+      <article
+        id={`recipe_${recipe.slug.current}`}
+        className="container mx-auto"
+      >
+        <section id="recipe_image" className="mb-3">
+          <Image {...imageProps} layout="responsive" alt={recipe.name} />
+        </section>
+
+        <section
+          id="recipe_title"
+          className="flex justify-center items-center py-3 mb-3"
+        >
+          <h1 className="text-3xl lg:text-5xl font-bold">{recipe.name}</h1>
+        </section>
+
+        <section
+          id="recipe_rating"
+          className="px-5 py-3 mb-3 flex flex-row justify-between lg:justify-around items-center bg-white rounded"
+        >
+          <div className="flex gap-2 justify-center items-center">
+            <RatingButton
+              initialValue={rating}
+              onClick={(rating) => {
+                console.log("user set rating", rating);
+              }}
+              count={count}
+              showCount
+            />
+          </div>
+
+          <FavoriteHeart
+            active={favorite}
+            onClick={handleOnClickFavorite}
+            title={favorite ? "Fjern fra favoritter" : "Legg til i favoritter"}
+            size="3xl"
+          />
+        </section>
+
+        <div className="flex flex-col lg:flex-row lg:gap-3">
+          <div className="lg:min-w-[20rem]">
+            <section
+              id="recipe_ingredients"
+              className="px-5 py-3 lg:mb-3 bg-white rounded"
+            >
+              <h2 className="text-2xl font-bold mb-5 text-center">
+                Ingredienser
+              </h2>
+
+              <Portions onChange={setPortions} className="mb-3" />
+
+              <hr className="border-stone-300 mb-3" />
+
+              <ul className="mb-3">
+                {recipe.ingredients?.map((ingredient) => (
+                  <li key={ingredient.ingredient?._id} className="flex gap-1">
+                    {ingredient.amount && (
+                      <strong>
+                        {calculateAmount(ingredient.amount, portions)}{" "}
+                        {ingredient.unit}
+                      </strong>
+                    )}
+                    <span>
+                      <Link
+                        href={`/ingredients/${encodeURIComponent(
+                          ingredient.ingredient?.slug.current!
+                        )}`}
+                      >
+                        <a className="text-sky-500 font-semibold hover:underline">
+                          {ingredient.ingredient?.name}
+                        </a>
+                      </Link>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button color="secondary" size="sm" outline fullWidth>
+                Legg ingredienser i barskap
+              </Button>
+            </section>
+
+            <section
+              id="recipe_equipment"
+              className="px-5 py-3 mb-3 bg-white rounded"
+            >
+              <h2 className="text-2xl font-bold mb-3">Utstyr</h2>
+              <ul>
+                <li>Målebeger</li>
+                <li>Shaker</li>
+              </ul>
+            </section>
+          </div>
+
+          <div className="flex-auto">
+            <section
+              id="recipe_instructions"
+              className="flex-auto px-5 py-3 mb-3 bg-white rounded"
+            >
+              <h2 className="text-2xl font-bold mb-3">Slik gjør du</h2>
+
+              <BlockContent
+                blocks={recipe.instructions || []}
+                serializers={serializer}
+              />
+            </section>
+
+            <section
+              id="recipe_like_rate"
+              className="px-5 py-3 mb-3 bg-white rounded"
+            >
+              <Button
+                className="uppercase gap-2"
+                color="danger"
+                outline={favorite}
+                size="lg"
+                fullWidth
+                title={
+                  favorite ? "Lagt til i favoritter" : "Legg til i favoritter"
+                }
+              >
+                <FaHeart />{" "}
+                {favorite ? "Lagt til i favoritter" : "Legg til i favoritter"}
+              </Button>
+            </section>
+          </div>
+        </div>
+      </article>
     </>
   );
 };
