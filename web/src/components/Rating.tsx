@@ -9,7 +9,7 @@ export interface RatingProps {
 
 const Rating: React.FC<RatingProps> = ({
   rating = 0,
-  color = "text-teal-500",
+  color = "text-amber-500",
   size = 16,
 }) => {
   return (

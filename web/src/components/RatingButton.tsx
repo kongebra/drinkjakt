@@ -4,13 +4,15 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 export interface RatingButtonProps {
   initialValue?: number;
   onClick: (rating: number) => void;
-  iconSize?: number;
+  count?: number;
+  showCount?: boolean;
 }
 
 const RatingButton: React.FC<RatingButtonProps> = ({
   initialValue = 0,
   onClick,
-  iconSize = 32,
+  count,
+  showCount,
 }) => {
   const [rating, setRating] = useState(initialValue);
   const [hover, setHover] = useState(initialValue);
@@ -22,33 +24,38 @@ const RatingButton: React.FC<RatingButtonProps> = ({
 
   const renderStar = (value: number) => {
     if (hover >= value) {
-      return <FaStar size={iconSize} />;
+      return <FaStar className="text-3xl" />;
     }
 
-    return <FaRegStar size={iconSize} />;
+    return <FaRegStar className="text-3xl" />;
   };
 
   return (
-    <div className="flex">
-      {[1, 2, 3, 4, 5].map((value) => {
-        return (
-          <button
-            key={value}
-            type="button"
-            className="text-teal-500 cursor-pointer px-1 flex justify-center items-center"
-            onClick={(e) => {
-              e.preventDefault();
+    <div className="flex items-center">
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((value) => {
+          return (
+            <button
+              key={value}
+              type="button"
+              className="text-amber-500 cursor-pointer px-1 flex justify-center items-center"
+              onClick={(e) => {
+                e.preventDefault();
 
-              setRating(value);
-              onClick(value);
-            }}
-            onMouseEnter={() => setHover(value)}
-            onMouseLeave={() => setHover(rating)}
-          >
-            {renderStar(value)}
-          </button>
-        );
-      })}
+                setRating(value);
+                onClick(value);
+              }}
+              onMouseEnter={() => setHover(value)}
+              onMouseLeave={() => setHover(rating)}
+            >
+              {renderStar(value)}
+            </button>
+          );
+        })}
+      </div>
+      {showCount && count !== undefined && (
+        <span className="text-xl font-light text-slate-800">({count})</span>
+      )}
     </div>
   );
 };
