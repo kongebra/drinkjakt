@@ -6,19 +6,21 @@ const path = require("path");
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-  // swcMinify: true,
-  // compiler: {
-  //   removeConsole: {
-  //     exclude: ["error"],
-  //   },
-  // },
+  swcMinify: true,
+  compiler: {
+    removeConsole: true,
+  },
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
   },
   images: {
     loader: "default",
-    domains: ["lh3.googleusercontent.com", "cdn.sanity.io"],
+    domains: [
+      "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
+      "cdn.sanity.io",
+    ],
   },
 };
 
