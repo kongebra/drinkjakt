@@ -104,14 +104,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({
     };
   }
 
-  if (Array.isArray(frontpage) && frontpage.length) {
-    return {
-      props: {
-        frontpage: frontpage[0],
-      },
-    };
-  }
-
   return {
     props: {
       frontpage,
