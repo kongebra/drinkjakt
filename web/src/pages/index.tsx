@@ -10,6 +10,8 @@ import { getClient } from "lib/sanity.server";
 import RecipeCard from "components/RecipeCard";
 
 import { useFavorites } from "hooks";
+import { useEffectOnce } from "usehooks-ts";
+import { featuredRecipesQuery, FeaturedRecipesQueryResponse } from "queries";
 
 interface Props {
   frontpage: FrontpageWithRecipes;
@@ -17,6 +19,14 @@ interface Props {
 
 const Home: NextPage<Props> = ({ frontpage }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  useEffectOnce(() => {
+    getClient()
+      .fetch<FeaturedRecipesQueryResponse>(featuredRecipesQuery)
+      .then((data) => {
+        console.table(data.featured_recipes);
+      });
+  });
 
   return (
     <>
