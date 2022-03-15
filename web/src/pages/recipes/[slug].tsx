@@ -119,14 +119,14 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
 
         <section
           id="recipe_title"
-          className="flex justify-center items-center py-3 mb-3"
+          className="flex justify-center items-center py-3 mb-3 lg:hidden"
         >
           <h1 className="text-3xl lg:text-5xl font-bold">{recipe.name}</h1>
         </section>
 
         <section
           id="recipe_rating"
-          className="px-5 py-3 mb-3 flex flex-row justify-between lg:justify-around items-center bg-white rounded"
+          className="px-5 py-3 mb-3 flex flex-row justify-between lg:justify-around items-center rounded lg:hidden"
         >
           <div className="flex gap-2 justify-center items-center">
             <RatingButton
@@ -207,31 +207,58 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
               id="recipe_instructions"
               className="flex-auto px-5 py-3 mb-3 bg-white rounded"
             >
+              <div
+                id="recipe_title_desktop"
+                className="hidden lg:block mb-3 bg-white rounded border-b pb-5"
+              >
+                <h1 className="text-3xl lg:text-5xl font-bold mb-5 text-center">
+                  {recipe.name}
+                </h1>
+
+                <div className="flex gap-2 justify-around items-center">
+                  <RatingButton
+                    initialValue={rating}
+                    onClick={(rating) => {
+                      console.log("user set rating", rating);
+                    }}
+                    count={count}
+                    showCount
+                  />
+
+                  <FavoriteHeart
+                    active={favorite}
+                    onClick={handleOnClickFavorite}
+                    title={
+                      favorite
+                        ? "Fjern fra favoritter"
+                        : "Legg til i favoritter"
+                    }
+                    size="3xl"
+                  />
+                </div>
+              </div>
+
               <h2 className="text-2xl font-bold mb-3">Slik gjør du</h2>
 
               <BlockContent
                 blocks={recipe.instructions || []}
                 serializers={serializer}
               />
-            </section>
 
-            <section
-              id="recipe_like_rate"
-              className="px-5 py-3 mb-3 bg-white rounded"
-            >
-              <Button
-                className="uppercase gap-2"
-                color="danger"
-                outline={favorite}
-                size="lg"
-                fullWidth
-                title={
-                  favorite ? "Lagt til i favoritter" : "Legg til i favoritter"
-                }
-              >
-                <FaHeart />{" "}
-                {favorite ? "Lagt til i favoritter" : "Legg til i favoritter"}
-              </Button>
+              <div className="pt-3 border-t">
+                <Button
+                  className="uppercase font-semibold gap-2"
+                  color="danger"
+                  outline={favorite}
+                  fullWidth
+                  title={
+                    favorite ? "Lagt til i favoritter" : "Legg til i favoritter"
+                  }
+                >
+                  <FaHeart />{" "}
+                  {favorite ? "Lagt til i favoritter" : "Legg til i favoritter"}
+                </Button>
+              </div>
             </section>
           </div>
         </div>
