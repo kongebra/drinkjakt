@@ -47,7 +47,7 @@ const outlineButtonColor: Record<ButtonColor, string> = {
 
 const buttonSize: Record<ButtonSize, string> = {
   sm: "px-2 py-1 text-sm",
-  md: "px-4 py-2",
+  md: "px-4 py-2 text-base",
   lg: "px-8 py-3 text-lg",
 };
 
