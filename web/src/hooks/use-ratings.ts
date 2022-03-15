@@ -59,14 +59,12 @@ export function useRatings(recipeId: string) {
 
   useEffect(() => {
     if (user) {
-      console.log("if user");
       fetchData();
     }
   }, [fetchData, user]);
 
   useEffect(() => {
     if (refetchData) {
-      console.log("if refetchData");
       fetchData();
       setRefetchData(false);
     }
