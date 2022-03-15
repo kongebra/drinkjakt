@@ -12,11 +12,13 @@ import MobileMenu from "./MobileMenu";
 import DesktopNavItem from "./DesktopNavItem";
 
 import { useAppUser } from "hooks";
+import { IconType } from "react-icons/lib";
 
 export interface NavItem {
   text: string;
   href: string;
   active?: boolean;
+  icon?: IconType;
 }
 
 export interface NavbarProps {
