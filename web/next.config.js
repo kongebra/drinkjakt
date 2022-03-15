@@ -7,9 +7,9 @@ const path = require("path");
  **/
 const nextConfig = {
   swcMinify: true,
-  compiler: {
-    removeConsole: true,
-  },
+  // compiler: {
+  //   removeConsole: true,
+  // },
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
