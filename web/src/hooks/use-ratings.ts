@@ -1,77 +1,45 @@
-import { useCallback, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery } from "react-query";
 
 import { groq } from "next-sanity";
 
+import { queryClient } from "lib/client";
 import { getClient } from "lib/sanity.server";
 
-import { Rating, User } from "schema";
+import { Rating } from "schema";
 
 import { useAppUser } from "./use-app-user";
 
 export function useRatings(recipeId: string) {
   const { user: appUser } = useAppUser();
 
-  const [user, setUser] = useState<User | undefined>(appUser);
-
-  useEffect(() => {
-    setUser(appUser);
-  }, [appUser]);
-
-  const [refetchData, setRefetchData] = useState(false);
-  const [userRating, setUserRating] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [count, setCount] = useState(0);
-
-  const fetchMyRating = useCallback(async (): Promise<number> => {
-    if (user) {
-      const query = groq`*[_type == "rating" && recipe._ref == $recipeId && user._ref == $userId][0]`;
-      const result = await getClient().fetch<Rating>(query, {
+  const [client] = useState(getClient());
+  const { data: ratingData } = useQuery(["rating", recipeId], () =>
+    client.fetch<Array<Rating>>(
+      groq`*[_type == "rating" && recipe._ref == $recipeId]`,
+      {
         recipeId,
-        userId: user._id,
-      });
-
-      if (result) {
-        return result.rating;
       }
+    )
+  );
+
+  const { data: userRatingData } = useQuery(
+    ["userRating", recipeId],
+    () =>
+      client.fetch<Rating>(
+        groq`*[_type == "rating" && recipe._ref == $recipeId && user._ref == $userId][0]`,
+        {
+          recipeId,
+          userId: appUser?._id,
+        }
+      ),
+    {
+      enabled: !!appUser,
     }
+  );
 
-    return 0;
-  }, [recipeId, user]);
-
-  const fetchRatings = useCallback(async (): Promise<Array<Rating>> => {
-    const query = groq`*[_type == "rating" && recipe._ref == $recipeId]`;
-    const result = await getClient().fetch<Array<Rating>>(query, { recipeId });
-
-    return result;
-  }, [recipeId]);
-
-  const fetchData = useCallback(() => {
-    fetchMyRating().then(setUserRating);
-    fetchRatings().then((ratings) => {
-      const len = ratings.length;
-      const divider = len || 1;
-      const sum = ratings.reduce((prev, curr) => prev + curr.rating, 0);
-
-      setCount(len);
-      setRating(sum / divider);
-    });
-  }, [fetchMyRating, fetchRatings]);
-
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, [fetchData, user]);
-
-  useEffect(() => {
-    if (refetchData) {
-      fetchData();
-      setRefetchData(false);
-    }
-  }, [fetchData, refetchData]);
-
-  const rateRecipe = (rating: number) => {
-    if (user) {
+  const mutation = useMutation(
+    ({ userId, rating }: { userId: string; rating: number }) => {
       return fetch("/api/recipes/rating", {
         method: "POST",
         headers: {
@@ -79,16 +47,36 @@ export function useRatings(recipeId: string) {
         },
         body: JSON.stringify({
           recipeId: recipeId,
-          userId: user._id,
+          userId,
           rating,
         }),
-      }).then(() => {
-        setRefetchData(true);
       });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["rating", recipeId]);
+        queryClient.invalidateQueries(["userRating", recipeId]);
+      },
     }
+  );
 
-    return undefined;
+  const rateRecipe = (rating: number) => {
+    if (appUser) {
+      mutation.mutate({ userId: appUser._id, rating });
+    }
   };
 
-  return { rating, count, userRating, rateRecipe };
+  const [rating, count] = useMemo(() => {
+    const sum = ratingData?.reduce((acc, curr) => acc + curr.rating, 0);
+    const len = ratingData?.length;
+
+    if (sum && len) {
+      const score = sum / len;
+      return [score, len];
+    }
+
+    return [0, 0];
+  }, [ratingData]);
+
+  return { rating, count, userRating: userRatingData?.rating, rateRecipe };
 }
