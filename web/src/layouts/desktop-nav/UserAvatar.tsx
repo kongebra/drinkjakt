@@ -61,9 +61,9 @@ const UserAvatar = () => {
       />
       <div
         className={clsx(
-          "absolute top-12 -right-4 rounded-xl z-10 min-w-[16rem] bg-white shadow transition flex flex-col gap-2 overflow-hidden py-2 border",
+          "absolute top-12 -right-4 rounded-xl z-10 min-w-[18rem] w-fit bg-white shadow transition flex flex-col overflow-hidden py-2 border",
           {
-            "opacity-0 translate-y-32 hidden": !value,
+            "opacity-0 translate-y-32 -z-50": !value,
             "opacity-100 translate-y-0": value,
           }
         )}
