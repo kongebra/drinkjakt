@@ -19,119 +19,129 @@ export interface AvaratProps {
   indicator?: "offline" | "online" | "idle" | "notification";
 }
 
-const Avatar: React.FC<AvaratProps> = ({
-  className,
-  style,
-
-  onClick,
-
-  label,
-  icon,
-
-  size = "md",
-  shape = "circle",
-
-  image,
-  imageAlt = "Avatar",
-  onImageError,
-
-  indicator,
-}) => {
-  const renderContent = () => {
-    if (label) {
-      return <span>{label}</span>;
-    }
-
-    if (icon) {
-      const Icon = icon;
-
-      return (
-        <Icon
-          className={clsx("", {
-            "text-lg": size === "sm",
-            "text-xl": size === "md",
-            "text-2xl": size === "lg",
-          })}
-        />
-      );
-    }
-
-    if (image) {
-      return (
-        <Image
-          className={clsx({
-            "rounded-full": shape === "circle",
-            "rounded-md": shape === "square",
-          })}
-          src={image}
-          alt={imageAlt}
-          width={256}
-          height={256}
-          onError={(e) => {
-            if (onImageError) {
-              onImageError(e);
-            }
-          }}
-        />
-      );
-    }
-
-    return null;
-  };
-
-  const renderIndicator = () => {
-    if (indicator) {
-      return (
-        <span
-          className={clsx(
-            "border-2 rounded-full border-white absolute bottom-0 right-0 w-3 h-3",
-            {
-              "bg-green-500": indicator === "online",
-              "bg-red-500": indicator === "offline",
-              "bg-amber-500": indicator === "idle",
-              "bg-purple-500": indicator === "notification",
-            }
-          )}
-        />
-      );
-    }
-
-    return null;
-  };
-
-  const getTextSize = () => {
-    switch (size) {
-      case "md":
-        return "text-base";
-      default:
-        return `text-${size}`;
-    }
-  };
-
-  const divClassName = clsx(
-    "relative bg-slate-300 inline-flex justify-center items-center",
-    getTextSize(),
+const Avatar: React.FC<AvaratProps> = React.forwardRef<
+  HTMLDivElement,
+  AvaratProps
+>(
+  (
     {
-      "rounded-full": shape === "circle",
-      "rounded-md": shape === "square",
+      className,
+      style,
 
-      "w-8 h-8": size === "sm",
-      "w-10 h-10": size === "md",
-      "w-12 h-12": size === "lg",
-      "cursor-pointer": !!onClick,
+      onClick,
+
+      label,
+      icon,
+
+      size = "md",
+      shape = "circle",
+
+      image,
+      imageAlt = "Avatar",
+      onImageError,
+
+      indicator,
     },
-    className
-  );
+    ref
+  ) => {
+    const renderContent = () => {
+      if (label) {
+        return <span>{label}</span>;
+      }
 
-  const content = renderContent();
-  const indicatorContent = renderIndicator();
+      if (icon) {
+        const Icon = icon;
 
-  return (
-    <div className={divClassName} style={style} onClick={onClick}>
-      {content}
-      {indicatorContent}
-    </div>
-  );
-};
+        return (
+          <Icon
+            className={clsx("", {
+              "text-lg": size === "sm",
+              "text-xl": size === "md",
+              "text-2xl": size === "lg",
+            })}
+          />
+        );
+      }
+
+      if (image) {
+        return (
+          <Image
+            className={clsx({
+              "rounded-full": shape === "circle",
+              "rounded-md": shape === "square",
+            })}
+            src={image}
+            alt={imageAlt}
+            width={256}
+            height={256}
+            onError={(e) => {
+              if (onImageError) {
+                onImageError(e);
+              }
+            }}
+          />
+        );
+      }
+
+      return null;
+    };
+
+    const renderIndicator = () => {
+      if (indicator) {
+        return (
+          <span
+            className={clsx(
+              "border-2 rounded-full border-white absolute bottom-0 right-0 w-3 h-3",
+              {
+                "bg-green-500": indicator === "online",
+                "bg-red-500": indicator === "offline",
+                "bg-amber-500": indicator === "idle",
+                "bg-purple-500": indicator === "notification",
+              }
+            )}
+          />
+        );
+      }
+
+      return null;
+    };
+
+    const getTextSize = () => {
+      switch (size) {
+        case "md":
+          return "text-base";
+        default:
+          return `text-${size}`;
+      }
+    };
+
+    const divClassName = clsx(
+      "relative bg-slate-300 inline-flex justify-center items-center",
+      getTextSize(),
+      {
+        "rounded-full": shape === "circle",
+        "rounded-md": shape === "square",
+
+        "w-8 h-8": size === "sm",
+        "w-10 h-10": size === "md",
+        "w-12 h-12": size === "lg",
+        "cursor-pointer": !!onClick,
+      },
+      className
+    );
+
+    const content = renderContent();
+    const indicatorContent = renderIndicator();
+
+    return (
+      <div className={divClassName} style={style} onClick={onClick} ref={ref}>
+        {content}
+        {indicatorContent}
+      </div>
+    );
+  }
+);
+
+Avatar.displayName = "Avatar";
 
 export default Avatar;
