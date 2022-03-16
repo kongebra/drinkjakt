@@ -19,10 +19,7 @@ export interface AvaratProps {
   indicator?: "offline" | "online" | "idle" | "notification";
 }
 
-const Avatar: React.FC<AvaratProps> = React.forwardRef<
-  HTMLDivElement,
-  AvaratProps
->(
+const Avatar = React.forwardRef<HTMLDivElement, AvaratProps>(
   (
     {
       className,
@@ -134,7 +131,7 @@ const Avatar: React.FC<AvaratProps> = React.forwardRef<
     const indicatorContent = renderIndicator();
 
     return (
-      <div className={divClassName} style={style} onClick={onClick} ref={ref}>
+      <div ref={ref} className={divClassName} style={style} onClick={onClick}>
         {content}
         {indicatorContent}
       </div>
