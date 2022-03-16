@@ -1,8 +1,7 @@
 name: Pull Request Web
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 env:
   NODE_VERSION: "16.x"
