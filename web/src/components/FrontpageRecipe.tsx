@@ -36,11 +36,11 @@ const FrontpageRecipe = ({ recipe }: { recipe: FeaturedRecipeDto }) => {
       >
         <div className="block flex-1 max-w-full max-h-fit">
           <Link href={`/recipes/${recipe.slug}`}>
-            <a>
+            <a className="block overflow-hidden rounded-xl">
               <Image
                 {...imageProps}
                 alt={recipe.name}
-                className="rounded-xl"
+                className="hover:scale-105 transition-transform duration-300"
                 layout="responsive"
                 unoptimized
               />
