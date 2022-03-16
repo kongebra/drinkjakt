@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import type {
   GetStaticPaths,
@@ -17,7 +17,7 @@ import serializer from "lib/serializer";
 
 import { RecipeDetails } from "schema";
 
-import { useAppUser, useRatings } from "hooks";
+import { useAppUser, useFavorites, useRatings } from "hooks";
 
 import { FaHeart } from "react-icons/fa";
 
@@ -33,44 +33,18 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const RecipePage: React.FC<Props> = ({ recipe }) => {
   const router = useRouter();
-
   const { user } = useAppUser();
-
-  const [favorite, setFavorite] = useState<boolean>(
-    user?.favorites?.some((f) => f._ref === recipe._id) || false
-  );
-
   const { rating, count } = useRatings(recipe._id);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const imageProps = useNextSanityImage(getClient(), recipe.image);
+
+  const favorite = isFavorite(recipe._id);
 
   const [portions, setPortions] = useState<number>(1);
 
-  const imageProps = useNextSanityImage(getClient(), recipe.image);
-
-  useEffect(() => {
-    if (user && user.favorites) {
-      setFavorite(user.favorites.some((f) => f._ref === recipe._id));
-    }
-  }, [recipe._id, user]);
-
   const handleOnClickFavorite = () => {
     if (user) {
-      setFavorite((prev) => !prev);
-
-      fetch("/api/profile/favorite", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user._id,
-          recipeId: recipe._id,
-          favorite: !favorite,
-        }),
-      })
-        .then(() => {})
-        .catch(() => {
-          setFavorite((prev) => prev);
-        });
+      toggleFavorite(recipe._id);
     }
   };
 
@@ -312,6 +286,7 @@ export const getStaticProps: GetStaticProps<{ recipe: RecipeDetails }> = async (
 ) => {
   const slug = context.params?.slug as string;
 
+  // TODO: Change this to use query from query-dir
   const recipe = await getClient().fetch<RecipeDetails>(query, { slug });
 
   if (!recipe) {
