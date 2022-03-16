@@ -44,6 +44,7 @@ export default {
         isUnique: isUniqueAcrossType("recipe"),
         auto: true,
       },
+      validation: (Rule) => Rule.required(),
       codegen: { required: true },
     },
     {

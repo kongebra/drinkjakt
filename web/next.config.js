@@ -6,11 +6,9 @@ const path = require("path");
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-  // swcMinify: true,
+  swcMinify: true,
   // compiler: {
-  //   removeConsole: {
-  //     exclude: ["error"],
-  //   },
+  //   removeConsole: true,
   // },
   reactStrictMode: true,
   sassOptions: {
@@ -18,11 +16,11 @@ const nextConfig = {
   },
   images: {
     loader: "default",
-    domains: ["lh3.googleusercontent.com", "cdn.sanity.io"],
-  },
-
-  experimental: {
-    outputStandalone: true,
+    domains: [
+      "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
+      "cdn.sanity.io",
+    ],
   },
 };
 

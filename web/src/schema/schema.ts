@@ -72,7 +72,7 @@ export interface Recipe extends SanityDocument {
    *
    *
    */
-  slug?: { _type: "slug"; current: string };
+  slug: { _type: "slug"; current: string };
 
   /**
    * Description — `text`
@@ -86,7 +86,7 @@ export interface Recipe extends SanityDocument {
    *
    * Count how many times the recipe has been viewed (View on the details page)
    */
-  viewCount?: number;
+  viewCount: number;
 
   /**
    * Image — `image`
@@ -183,6 +183,13 @@ export interface Ingredient extends SanityDocument {
     crop?: SanityImageCrop;
     hotspot?: SanityImageHotspot;
   };
+
+  /**
+   * Unit — `string`
+   *
+   *
+   */
+  unit?: string;
 }
 
 /**
@@ -434,14 +441,14 @@ export type RecipeIngredient = {
    *
    *
    */
-  amount: number;
+  amount?: number;
 
   /**
    * Unit — `string`
    *
    *
    */
-  unit: string;
+  unit?: string;
 };
 
 export type Documents =

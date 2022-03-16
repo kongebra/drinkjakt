@@ -40,6 +40,11 @@ export default {
         hotspot: true,
       },
     },
+    {
+      name: "unit",
+      title: "Unit",
+      type: "string",
+    },
   ],
   preview: {
     select: {
