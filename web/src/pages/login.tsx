@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 const LoginPage = () => {
   const router = useRouter();
 
-  const { user, isLoading, error, checkSession } = useUser();
+  const { user, isLoading, error } = useUser();
 
   useEffect(() => {
     if (!isLoading && !user) {
