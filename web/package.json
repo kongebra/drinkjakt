@@ -4,10 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "dev:server": "nodemon src/server/index.js",
     "build": "next build",
     "start": "next start",
-    "start:server": "node src/server/index.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -17,7 +15,6 @@
     "@sanity/block-content-to-react": "^3.0.0",
     "@sanity/client": "^3.1.0",
     "clsx": "^1.1.1",
-    "cross-env": "^7.0.3",
     "nanoid": "^3.3.1",
     "next": "12.1.0",
     "next-sanity": "^0.4.0",
@@ -25,6 +22,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
+    "react-query": "^3.34.16",
     "react-toastify": "^8.1.1",
     "sanity-codegen": "^0.9.8",
     "sass": "^1.49.7",
@@ -36,6 +34,7 @@
     "@types/react": "17.0.39",
     "@types/react-dom": "^17.0.11",
     "autoprefixer": "^10.4.2",
+    "cross-env": "^7.0.3",
     "eslint": "8.9.0",
     "eslint-config-next": "12.0.10",
     "nodemon": "^2.0.15",
