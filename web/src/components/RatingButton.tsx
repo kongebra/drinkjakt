@@ -1,11 +1,15 @@
+import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
+import { IconType } from "react-icons/lib";
 
 export interface RatingButtonProps {
   initialValue?: number;
   onClick: (rating: number) => void;
   count?: number;
   showCount?: boolean;
+  className?: string;
+  countClassName?: string;
 }
 
 const RatingButton: React.FC<RatingButtonProps> = ({
@@ -13,7 +17,11 @@ const RatingButton: React.FC<RatingButtonProps> = ({
   onClick,
   count,
   showCount,
+  className,
+  countClassName,
 }) => {
+  const iconClassName = clsx("text-3xl", className);
+
   const [rating, setRating] = useState(initialValue);
   const [hover, setHover] = useState(initialValue);
 
@@ -23,11 +31,13 @@ const RatingButton: React.FC<RatingButtonProps> = ({
   }, [initialValue]);
 
   const renderStar = (value: number) => {
+    let Icon: IconType = FaRegStar;
+
     if (hover >= value) {
-      return <FaStar className="text-3xl" />;
+      Icon = FaStar;
     }
 
-    return <FaRegStar className="text-3xl" />;
+    return <Icon className={iconClassName} />;
   };
 
   return (
@@ -54,7 +64,11 @@ const RatingButton: React.FC<RatingButtonProps> = ({
         })}
       </div>
       {showCount && count !== undefined && (
-        <span className="text-xl font-light text-slate-800">({count})</span>
+        <span
+          className={clsx("text-xl font-light text-slate-800", countClassName)}
+        >
+          ({count})
+        </span>
       )}
     </div>
   );
