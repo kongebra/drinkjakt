@@ -23,9 +23,8 @@ const RecipeRatingButtonModal: React.FC<RecipeRatingButtonModalProps> = ({
   const [rating, setRating] = useState(0);
 
   const handleOnClick = () => {
-    rateRecipe(rating)?.then(() => {
-      setFalse();
-    });
+    rateRecipe(rating);
+    setFalse();
   };
 
   return (

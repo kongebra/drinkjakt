@@ -56,9 +56,9 @@ const RecipesPage = () => {
                   <RecipeCard
                     key={recipe._id}
                     recipe={recipe}
-                    favorite={isFavorite(recipe)}
+                    favorite={isFavorite(recipe._id)}
                     onClickFavorite={() => {
-                      toggleFavorite(recipe);
+                      toggleFavorite(recipe._id);
                     }}
                   />
                 );

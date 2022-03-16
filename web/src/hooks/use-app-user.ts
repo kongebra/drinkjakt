@@ -1,31 +1,25 @@
+import { useState } from "react";
+import { useQuery } from "react-query";
+
 import { useUser } from "@auth0/nextjs-auth0";
+
 import { User } from "schema";
+
 import { getClient } from "lib/sanity.server";
-import { groq } from "next-sanity";
-import { useEffect, useState } from "react";
+
+import { currentUserBySubQuery } from "queries";
 
 export function useAppUser() {
-  const { user: authUser } = useUser();
+  const { user: authUser, isLoading: authIsLoading } = useUser();
 
-  const [user, setUser] = useState<User | undefined>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | undefined>();
-
-  const query = groq`*[_type == "user" && auth0_sub == $sub][0]`;
-
-  useEffect(() => {
-    if (authUser?.sub) {
-      setIsLoading(true);
-
-      getClient()
-        .fetch<User>(query, { sub: authUser?.sub })
-        .then((res) => {
-          setUser(res);
-        })
-        .catch(() => setError("Could not fetch user."))
-        .finally(() => setIsLoading(false));
+  const [client] = useState(getClient());
+  const { data, isLoading, ...rest } = useQuery(
+    "appUser",
+    () => client.fetch<User>(currentUserBySubQuery, { sub: authUser?.sub }),
+    {
+      enabled: !!authUser,
     }
-  }, [authUser?.sub, query]);
+  );
 
-  return { user, isLoading, error };
+  return { user: data, isLoading: isLoading || authIsLoading, ...rest };
 }

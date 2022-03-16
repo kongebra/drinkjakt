@@ -25,7 +25,7 @@ const afterCallback: AfterCallback = async (_req, _res, session, _state) => {
       lastName: user.family_name,
       nickname: user.nickname,
       email: user.email,
-      picture: user.picture || "",
+      picture: user.picture || undefined,
       auth0_sub: user.sub,
     });
   } else {
