@@ -54,7 +54,8 @@ export function useFavorites() {
   }
 
   function toggleFavorite(recipeId: string) {
-    if (user) {
+    // Prevent spamming this mutation
+    if (user && !mutation.isLoading) {
       if (isFavorite(recipeId)) {
         removeFavorite(recipeId);
       } else {

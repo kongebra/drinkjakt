@@ -6,27 +6,45 @@ import { useNextSanityImage } from "next-sanity-image";
 
 import { FeaturedRecipeDto } from "queries";
 
-import { useRatings, useFavorites } from "hooks";
+import { useRatings, useFavorites, useAppUser } from "hooks";
 
 import { getClient } from "lib/sanity.server";
 
 import RatingButton from "./RatingButton";
 import FavoriteHeart from "./FavoriteHeart";
+import { useBoolean } from "usehooks-ts";
+import Modal from "./Modal";
+import Button from "./Button";
+import { useRouter } from "next/router";
 
 const FrontpageRecipe = ({ recipe }: { recipe: FeaturedRecipeDto }) => {
+  const router = useRouter();
+  const { user } = useAppUser();
   const { rating, count, rateRecipe } = useRatings(recipe._id);
   const { isFavorite, toggleFavorite } = useFavorites();
-
-  const IMAGE_SIZE = 1024;
+  const { value: showLoginModal, setTrue, setFalse } = useBoolean();
   const imageProps = useNextSanityImage(getClient(), recipe.image, {
     imageBuilder: (builder, _options) => {
-      return builder
-        .width(IMAGE_SIZE)
-        .height(IMAGE_SIZE)
-        .fit("crop")
-        .crop("focalpoint");
+      return builder.width(1024).height(1024).fit("crop").crop("focalpoint");
     },
   });
+
+  const handleOnClickFavorite = () => {
+    if (!user) {
+      setTrue();
+      return;
+    }
+
+    toggleFavorite(recipe._id);
+  };
+  const handleOnClickRating = (rating: number) => {
+    if (!user) {
+      setTrue();
+      return;
+    }
+
+    rateRecipe(rating);
+  };
 
   return (
     <>
@@ -60,21 +78,35 @@ const FrontpageRecipe = ({ recipe }: { recipe: FeaturedRecipeDto }) => {
               initialValue={rating}
               count={count}
               showCount
-              onClick={rateRecipe}
+              onClick={handleOnClickRating}
             />
 
             <FavoriteHeart
               className="text-4xl"
               active={isFavorite(recipe._id)}
-              onClick={(e) => {
-                e.preventDefault();
-
-                toggleFavorite(recipe._id);
-              }}
+              onClick={handleOnClickFavorite}
             />
           </div>
         </div>
       </div>
+
+      <Modal open={showLoginModal} onClose={setFalse}>
+        <div className="flex flex-col justify-center gap-8">
+          <h2 className="text-xl">
+            Logg inn for å gi oppskrifter rating, eller legge de til som
+            favoritter!
+          </h2>
+
+          <Button
+            onClick={() => {
+              setFalse();
+              router.push("/api/auth/login");
+            }}
+          >
+            Logg inn
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };

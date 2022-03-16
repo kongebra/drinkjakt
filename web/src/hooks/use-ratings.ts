@@ -61,7 +61,7 @@ export function useRatings(recipeId: string) {
   );
 
   const rateRecipe = (rating: number) => {
-    if (appUser) {
+    if (appUser && !mutation.isLoading) {
       mutation.mutate({ userId: appUser._id, rating });
     }
   };

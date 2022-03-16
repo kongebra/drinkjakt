@@ -9,7 +9,7 @@ import { FaTimes } from "react-icons/fa";
 export interface ModalProps {
   open: boolean;
 
-  title: React.ReactNode;
+  title?: React.ReactNode;
 
   onClose: () => void;
 
