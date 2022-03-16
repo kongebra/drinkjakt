@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 
 export interface RatingButtonProps {
@@ -31,10 +31,23 @@ const RatingButton: React.FC<RatingButtonProps> = ({
   }, [initialValue]);
 
   const renderStar = (value: number) => {
+    const roundedRating = Math.round(rating * 2) / 2 + 1;
+
     let Icon: IconType = FaRegStar;
 
-    if (hover >= value) {
+    if (hover !== rating) {
+      if (hover >= value) {
+        Icon = FaStar;
+      }
+
+      return <Icon className={iconClassName} />;
+    }
+
+    if (roundedRating - value >= 1) {
       Icon = FaStar;
+    }
+    if (roundedRating - value === 0.5) {
+      Icon = FaStarHalfAlt;
     }
 
     return <Icon className={iconClassName} />;
@@ -57,6 +70,9 @@ const RatingButton: React.FC<RatingButtonProps> = ({
               }}
               onMouseEnter={() => setHover(value)}
               onMouseLeave={() => setHover(rating)}
+              title={`Gi oppskrift ${value} ${
+                value > 1 ? "stjerner" : "stjerne"
+              }`}
             >
               {renderStar(value)}
             </button>
