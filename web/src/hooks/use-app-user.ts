@@ -10,10 +10,10 @@ import { getClient } from "lib/sanity.server";
 import { currentUserBySubQuery } from "queries";
 
 export function useAppUser() {
-  const { user: authUser } = useUser();
+  const { user: authUser, isLoading: authIsLoading } = useUser();
 
   const [client] = useState(getClient());
-  const { data, ...rest } = useQuery(
+  const { data, isLoading, ...rest } = useQuery(
     "appUser",
     () => client.fetch<User>(currentUserBySubQuery, { sub: authUser?.sub }),
     {
@@ -21,5 +21,5 @@ export function useAppUser() {
     }
   );
 
-  return { user: data, ...rest };
+  return { user: data, isLoading: isLoading || authIsLoading, ...rest };
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Link from "next/link";
 
@@ -14,7 +14,7 @@ export interface DesktopNavigationProps {
 
 const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ navItems }) => {
   const router = useRouter();
-  const { user, isFetched } = useAppUser();
+  const { user, isLoading } = useAppUser();
 
   return (
     <>
@@ -38,7 +38,7 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ navItems }) => {
           </div>
         </div>
 
-        {isFetched && (
+        {!isLoading && (
           <div className="flex gap-4 items-center">
             <UserAvatar />
 
