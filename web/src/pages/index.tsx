@@ -19,12 +19,12 @@ const Home: NextPage<Props> = ({ frontpage }) => {
       </Head>
 
       <section>
-        <div className="container mx-auto pt-10 pb-5 px-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold mb-10">
+        <div className="container mx-auto pt-4 md:pt-8 pb-5 px-4">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl text-center font-bold mb-4 md:mb-8">
             Fremhevede drinker
           </h1>
 
-          <div className="flex flex-col gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 flex-wrap gap-4">
             {frontpage.featured_recipes.map((recipe) => (
               <FrontpageRecipe key={recipe._id} recipe={recipe} />
             ))}

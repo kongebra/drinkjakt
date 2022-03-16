@@ -20,7 +20,7 @@ const RatingButton: React.FC<RatingButtonProps> = ({
   className,
   countClassName,
 }) => {
-  const iconClassName = clsx("text-3xl", className);
+  const iconClassName = clsx(className);
 
   const [rating, setRating] = useState(initialValue);
   const [hover, setHover] = useState(initialValue);
