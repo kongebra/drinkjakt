@@ -53,7 +53,7 @@ const MobileTopNavigation: React.FC<MobileTopNavigationProps> = ({
       </nav>
 
       <div
-        className={clsx("absolute inset-0 backdrop-blur-sm bg-black/30 z-10", {
+        className={clsx("fixed inset-0 backdrop-blur-sm bg-black/30 z-10", {
           hidden: !value,
         })}
         onClick={() => {
