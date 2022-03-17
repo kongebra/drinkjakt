@@ -36,7 +36,11 @@ const RecipePage: React.FC<Props> = ({ recipe }) => {
   const { user } = useAppUser();
   const { rating, count } = useRatings(recipe._id);
   const { toggleFavorite, isFavorite } = useFavorites();
-  const imageProps = useNextSanityImage(getClient(), recipe.image);
+
+  const imageProps = useNextSanityImage(getClient(), recipe.image, {
+    imageBuilder: (builder) =>
+      builder.width(1536).height(1536).fit("crop").crop("focalpoint"),
+  });
 
   const favorite = isFavorite(recipe._id);
 
